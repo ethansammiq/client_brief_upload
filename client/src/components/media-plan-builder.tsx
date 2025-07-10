@@ -49,7 +49,7 @@ export default function MediaPlanBuilder({
   const currentVersion = mediaPlanVersions.find(v => v.id === selectedVersionId);
 
   const { data: lineItems = [] } = useQuery<MediaPlanLineItem[]>({
-    queryKey: ['/api/media-plan-versions', selectedVersionId, 'line-items'],
+    queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`],
     enabled: !!selectedVersionId,
   });
 
@@ -90,7 +90,7 @@ export default function MediaPlanBuilder({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ 
-        queryKey: ['/api/media-plan-versions', selectedVersionId, 'line-items'] 
+        queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`] 
       });
       setEditingLineItem(null);
       toast({
@@ -106,7 +106,7 @@ export default function MediaPlanBuilder({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ 
-        queryKey: ['/api/media-plan-versions', selectedVersionId, 'line-items'] 
+        queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`] 
       });
       toast({
         title: "Deleted",

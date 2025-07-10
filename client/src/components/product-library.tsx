@@ -49,8 +49,9 @@ export default function ProductLibrary({ selectedVersionId }: ProductLibraryProp
       return apiRequest("POST", "/api/line-items", lineItem);
     },
     onSuccess: () => {
+      // Invalidate the line items query with the correct key
       queryClient.invalidateQueries({ 
-        queryKey: ['/api/media-plan-versions', selectedVersionId, 'line-items'] 
+        queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`] 
       });
       toast({
         title: "Product Added",
