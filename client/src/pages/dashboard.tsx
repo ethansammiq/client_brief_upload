@@ -92,7 +92,7 @@ export default function Dashboard() {
                         <div className="flex items-center space-x-6 text-gray-300">
                           <div className="flex items-center">
                             <span className="text-sm font-medium text-[#2b0030]">Client:</span>
-                            <span className="ml-2 text-white">{currentRfp?.clientName || "Not specified"}</span>
+                            <span className="ml-2 text-[#2b0030]">{currentRfp?.clientName || "Not specified"}</span>
                           </div>
                           <div className="flex items-center">
                             <span className="text-sm font-medium">Due Date:</span>
