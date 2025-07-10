@@ -94,7 +94,7 @@ export default function Dashboard() {
                             <span className="text-sm font-medium text-[#2b0030]">Client:</span>
                             <span className="ml-2 text-[#2b0030]">{currentRfp?.clientName || "Not specified"}</span>
                           </div>
-                          <div className="flex items-center">
+                          <div className="flex items-center text-[#2b0030]">
                             <span className="text-sm font-medium">Due Date:</span>
                             <span className="ml-2 text-[#2b0030]">{currentRfp?.dueDate || "Not specified"}</span>
                           </div>
