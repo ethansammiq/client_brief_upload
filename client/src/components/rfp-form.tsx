@@ -15,10 +15,11 @@ import { insertRfpResponseSchema, type RfpResponse, type InsertRfpResponse } fro
 
 interface RfpFormProps {
   rfpResponse?: RfpResponse;
-  onSuccess?: () => void;
+  onSuccess?: (rfpResponse?: RfpResponse) => void;
+  children?: React.ReactNode;
 }
 
-export default function RfpForm({ rfpResponse, onSuccess }: RfpFormProps) {
+export default function RfpForm({ rfpResponse, onSuccess, children }: RfpFormProps) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -46,11 +47,11 @@ export default function RfpForm({ rfpResponse, onSuccess }: RfpFormProps) {
         return apiRequest("POST", "/api/rfp-responses", data);
       }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['/api/rfp-responses'] });
       setOpen(false);
       form.reset();
-      onSuccess?.();
+      onSuccess?.(data);
       toast({
         title: isEditing ? "Updated" : "Created",
         description: `RFP response has been ${isEditing ? "updated" : "created"} successfully.`,
@@ -72,19 +73,21 @@ export default function RfpForm({ rfpResponse, onSuccess }: RfpFormProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className={isEditing ? "bg-blue-600 hover:bg-blue-700" : "bg-green-600 hover:bg-green-700"}>
-          {isEditing ? (
-            <>
-              <Edit className="w-4 h-4 mr-2" />
-              Edit Campaign
-            </>
-          ) : (
-            <>
-              <Plus className="w-4 h-4 mr-2" />
-              New Campaign
-            </>
-          )}
-        </Button>
+        {children || (
+          <Button className={isEditing ? "bg-blue-600 hover:bg-blue-700" : "bg-green-600 hover:bg-green-700"}>
+            {isEditing ? (
+              <>
+                <Edit className="w-4 h-4 mr-2" />
+                Edit Campaign
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4 mr-2" />
+                New Campaign
+              </>
+            )}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
