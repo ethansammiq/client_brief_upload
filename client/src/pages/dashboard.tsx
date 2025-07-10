@@ -68,22 +68,21 @@ export default function Dashboard() {
     <div className="flex flex-col h-screen bg-background">
       <TopNavigation />
       <SubNavigation activeTab={activeTab} onTabChange={setActiveTab} />
-      
       <div className="flex-1 flex flex-col overflow-hidden">
         {activeTab === "media-planner" && (
           <div className="flex-1 overflow-auto">
             {!showBuilder ? (
               /* Media Plans Library */
-              <div className="bg-gray-50 min-h-full">
+              (<div className="bg-gray-50 min-h-full">
                 <div className="max-w-7xl mx-auto px-6 py-6">
                   <MediaPlansLibrary onSelectPlan={handleSelectPlan} />
                 </div>
-              </div>
+              </div>)
             ) : (
               /* Media Plan Builder */
-              <>
+              (<>
                 {/* Campaign Title Header */}
-                <div className="bg-gray-900 text-white px-6 py-6">
+                <div className="text-white px-6 py-6 bg-[#2B0030]">
                   <div className="max-w-7xl mx-auto">
                     <div className="flex items-center justify-between">
                       <div>
@@ -118,9 +117,6 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-
-
-
                 {/* Main Content */}
                 <div className="bg-gray-50 min-h-full">
                   <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
@@ -180,7 +176,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-              </>
+              </>)
             )}
           </div>
         )}
