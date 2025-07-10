@@ -106,6 +106,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const rfpResponseData = insertRfpResponseSchema.parse(req.body);
       const rfpResponse = await storage.createRfpResponse(rfpResponseData);
+      
+      // Automatically create a default media plan version for new campaigns
+      const defaultVersion = {
+        rfpResponseId: rfpResponse.id,
+        versionNumber: 1,
+        title: "Plan Version 1",
+        totalBudget: "0",
+        totalImpressions: 0,
+        avgCpm: "0",
+        isActive: true,
+      };
+      
+      await storage.createMediaPlanVersion(defaultVersion);
+      
       res.status(201).json(rfpResponse);
     } catch (error) {
       res.status(400).json({ message: "Invalid RFP response data" });

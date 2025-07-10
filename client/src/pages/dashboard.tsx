@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import TopNavigation from "@/components/top-navigation";
 import SubNavigation from "@/components/sub-navigation";
@@ -32,9 +32,17 @@ export default function Dashboard() {
     enabled: !!selectedRfpId,
   });
 
+  // Auto-select first available version when versions are loaded
+  useEffect(() => {
+    if (mediaPlanVersions.length > 0 && !mediaPlanVersions.find(v => v.id === selectedVersionId)) {
+      setSelectedVersionId(mediaPlanVersions[0].id);
+    }
+  }, [mediaPlanVersions, selectedVersionId]);
+
   const handleSelectPlan = (planId: number) => {
     setSelectedRfpId(planId);
     setShowBuilder(true);
+    // Version will be auto-selected by useEffect above
   };
 
   const handleBackToLibrary = () => {
