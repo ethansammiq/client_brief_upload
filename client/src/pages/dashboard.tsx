@@ -96,7 +96,7 @@ export default function Dashboard() {
                           </div>
                           <div className="flex items-center">
                             <span className="text-sm font-medium">Due Date:</span>
-                            <span className="ml-2 text-white">{currentRfp?.dueDate || "Not specified"}</span>
+                            <span className="ml-2 text-[#2b0030]">{currentRfp?.dueDate || "Not specified"}</span>
                           </div>
                           {currentRfp?.budget && (
                             <div className="flex items-center">
