@@ -362,32 +362,7 @@ export default function MediaPlanBuilder({
           </div>
         </div>
 
-      {/* Campaign Performance Metrics */}
-      <div className="mt-6 bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="p-6 border-b border-gray-200">
-          <h4 className="text-lg font-semibold text-gray-900">Campaign Performance Forecast</h4>
-        </div>
-        <div className="p-6">
-          <div className="grid grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">2.8M</div>
-              <div className="text-sm text-gray-500">Estimated Reach</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">2.3</div>
-              <div className="text-sm text-gray-500">Avg Frequency</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">0.85%</div>
-              <div className="text-sm text-gray-500">Expected CTR</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">78%</div>
-              <div className="text-sm text-gray-500">Video Completion</div>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 }
