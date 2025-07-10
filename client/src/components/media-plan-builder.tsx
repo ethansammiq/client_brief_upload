@@ -156,61 +156,68 @@ export default function MediaPlanBuilder({
   };
 
   return (
-    <div className="flex-1 flex flex-col">
-      {/* RFP Info Header */}
-      <div className="bg-white p-6 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="text-lg font-semibold text-text">
-              {rfpResponse?.title || "Loading..."}
-            </h3>
-            <p className="text-sm text-gray-500">
-              Client: {rfpResponse?.clientName || "Loading..."} | 
-              Due: {rfpResponse?.dueDate || "Loading..."}
-            </p>
-          </div>
-          <div className="flex items-center space-x-3">
-            <Select 
-              value={selectedVersionId.toString()} 
-              onValueChange={(value) => onVersionChange(parseInt(value))}
-            >
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Select version" />
-              </SelectTrigger>
-              <SelectContent>
-                {mediaPlanVersions.map((version) => (
-                  <SelectItem key={version.id} value={version.id.toString()}>
-                    {version.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button
-              onClick={() => createVersionMutation.mutate()}
-              disabled={createVersionMutation.isPending}
-              className="bg-secondary hover:bg-green-700"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              New Version
-            </Button>
-          </div>
+    <div className="w-full">
+      {/* RFP Info and Controls */}
+      <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900">
+            {rfpResponse?.title || "Loading..."}
+          </h3>
+          <p className="text-sm text-gray-600">
+            Client: {rfpResponse?.clientName || "Loading..."} | 
+            Due: {rfpResponse?.dueDate || "Loading..."}
+          </p>
+        </div>
+        <div className="flex items-center space-x-3">
+          <Select 
+            value={selectedVersionId.toString()} 
+            onValueChange={(value) => onVersionChange(parseInt(value))}
+          >
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Select version" />
+            </SelectTrigger>
+            <SelectContent>
+              {mediaPlanVersions.map((version) => (
+                <SelectItem key={version.id} value={version.id.toString()}>
+                  {version.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            onClick={() => createVersionMutation.mutate()}
+            disabled={createVersionMutation.isPending}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Version
+          </Button>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="bg-white p-4 rounded-lg border border-gray-200">
+          <div className="text-sm text-gray-600">Total Budget</div>
+          <div className="text-xl font-semibold text-green-600">{totalBudget}</div>
+        </div>
+        <div className="bg-white p-4 rounded-lg border border-gray-200">
+          <div className="text-sm text-gray-600">Total Impressions</div>
+          <div className="text-xl font-semibold text-blue-600">{totalImpressions}</div>
+        </div>
+        <div className="bg-white p-4 rounded-lg border border-gray-200">
+          <div className="text-sm text-gray-600">Average CPM</div>
+          <div className="text-xl font-semibold text-purple-600">{avgCpm}</div>
         </div>
       </div>
 
       {/* Media Plan Table */}
-      <div className="flex-1 overflow-y-auto p-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <h4 className="text-lg font-semibold text-text">
-                {currentVersion?.title || "Media Plan"}
-              </h4>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-500">Total Budget:</span>
-                <span className="text-lg font-semibold text-secondary">{totalBudget}</span>
-              </div>
-            </div>
-          </div>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="p-4 border-b border-gray-200">
+          <h4 className="text-lg font-semibold text-gray-900">
+            {currentVersion?.title || "Media Plan"}
+          </h4>
+        </div>
 
           <div className="overflow-x-auto">
             <Table>
@@ -338,11 +345,11 @@ export default function MediaPlanBuilder({
               <div className="flex items-center space-x-6">
                 <div className="text-sm">
                   <span className="text-gray-500">Total Impressions:</span>
-                  <span className="font-medium text-text ml-2">{totalImpressions}</span>
+                  <span className="font-medium text-gray-900 ml-2">{totalImpressions}</span>
                 </div>
                 <div className="text-sm">
                   <span className="text-gray-500">Avg CPM:</span>
-                  <span className="font-medium text-text ml-2">{avgCpm}</span>
+                  <span className="font-medium text-gray-900 ml-2">{avgCpm}</span>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -355,29 +362,28 @@ export default function MediaPlanBuilder({
           </div>
         </div>
 
-        {/* Campaign Performance Metrics */}
-        <div className="mt-6 bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h4 className="text-lg font-semibold text-text">Campaign Performance Forecast</h4>
-          </div>
-          <div className="p-6">
-            <div className="grid grid-cols-4 gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">2.8M</div>
-                <div className="text-sm text-gray-500">Estimated Reach</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-secondary">2.3</div>
-                <div className="text-sm text-gray-500">Avg Frequency</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-accent">0.85%</div>
-                <div className="text-sm text-gray-500">Expected CTR</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-warning">78%</div>
-                <div className="text-sm text-gray-500">Video Completion</div>
-              </div>
+      {/* Campaign Performance Metrics */}
+      <div className="mt-6 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="p-6 border-b border-gray-200">
+          <h4 className="text-lg font-semibold text-gray-900">Campaign Performance Forecast</h4>
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">2.8M</div>
+              <div className="text-sm text-gray-500">Estimated Reach</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">2.3</div>
+              <div className="text-sm text-gray-500">Avg Frequency</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">0.85%</div>
+              <div className="text-sm text-gray-500">Expected CTR</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600">78%</div>
+              <div className="text-sm text-gray-500">Video Completion</div>
             </div>
           </div>
         </div>

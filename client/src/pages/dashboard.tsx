@@ -51,26 +51,26 @@ export default function Dashboard() {
       
       <div className="flex-1 flex flex-col overflow-hidden">
         {activeTab === "media-planner" && (
-          <>
-            {/* Header */}
-            <div className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+          <div className="flex-1 overflow-auto">
+            {/* Header Section */}
+            <div className="bg-white shadow-sm border-b border-gray-200 px-6 py-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold text-text">RFP Response Builder</h2>
-                  <p className="text-sm text-gray-500">Create comprehensive media plans for client proposals</p>
+                  <h1 className="text-2xl font-bold text-gray-900">Media Plan Builder</h1>
+                  <p className="text-gray-600 mt-1">Create comprehensive media plans for client proposals</p>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3">
                   <Button 
                     variant="outline" 
                     onClick={handleExportPlan}
-                    className="text-gray-700 hover:bg-gray-100"
+                    className="border-gray-300 text-gray-700 hover:bg-gray-50"
                   >
                     <Download className="w-4 h-4 mr-2" />
                     Export Plan
                   </Button>
                   <Button 
                     onClick={handleSaveRfp}
-                    className="bg-primary hover:bg-blue-700"
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
                   >
                     <Save className="w-4 h-4 mr-2" />
                     Save RFP
@@ -79,21 +79,40 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Main Workspace */}
-            <div className="flex-1 overflow-hidden">
-              <div className="h-full flex">
-                <ProductLibrary 
-                  selectedVersionId={selectedVersionId}
-                />
-                <MediaPlanBuilder
-                  rfpResponse={currentRfp}
-                  mediaPlanVersions={mediaPlanVersions}
-                  selectedVersionId={selectedVersionId}
-                  onVersionChange={setSelectedVersionId}
-                />
+            {/* Main Content */}
+            <div className="bg-gray-50 min-h-full">
+              <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
+                {/* Product Catalog Section */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="px-6 py-4 border-b border-gray-200">
+                    <h2 className="text-lg font-semibold text-gray-900">Product Catalog</h2>
+                    <p className="text-sm text-gray-600 mt-1">Browse and add products to your media plan</p>
+                  </div>
+                  <div className="p-6">
+                    <ProductLibrary 
+                      selectedVersionId={selectedVersionId}
+                    />
+                  </div>
+                </div>
+
+                {/* Media Plan Section */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="px-6 py-4 border-b border-gray-200">
+                    <h2 className="text-lg font-semibold text-gray-900">Media Plan</h2>
+                    <p className="text-sm text-gray-600 mt-1">Configure your campaign line items and budgets</p>
+                  </div>
+                  <div className="p-6">
+                    <MediaPlanBuilder
+                      rfpResponse={currentRfp}
+                      mediaPlanVersions={mediaPlanVersions}
+                      selectedVersionId={selectedVersionId}
+                      onVersionChange={setSelectedVersionId}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </>
+          </div>
         )}
 
         {activeTab === "media-products" && (
