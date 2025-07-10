@@ -59,23 +59,7 @@ export default function TopNavigation() {
         </div>
       </div>
 
-      {/* Sub-navigation bar */}
-      <div className="bg-[#1A0B2E] px-6 py-2">
-        <div className="flex items-center space-x-6 text-sm">
-          <div className="flex items-center space-x-1">
-            <span className="text-gray-400">US</span>
-            <span className="text-gray-400">|</span>
-            <span className="text-gray-300">Nike</span>
-          </div>
-          <div className="flex space-x-6">
-            <button className="text-gray-400 hover:text-white">Showcase</button>
-            <button className="text-gray-400 hover:text-white">Resources</button>
-            <button className="text-gray-400 hover:text-white">Mocks</button>
-            <button className="text-gray-400 hover:text-white">Favorites</button>
-            <button className="text-gray-400 hover:text-white">MiQ Creative Studio</button>
-          </div>
-        </div>
-      </div>
+
     </header>
   );
 }
