@@ -11,6 +11,8 @@ This is a full-stack TypeScript application for managing RFP (Request for Propos
   - Added targeting details and ad sizes columns to media plan display
   - Improved table layout with better column spacing and readability
   - Fixed React Query cache invalidation for real-time updates when adding products
+  - Added MiQ-style top navigation with Intelligence, Audiences, Creatives, Campaigns, Reports, and Plan buttons
+  - Integrated professional header matching main MiQ system design with user avatar and sub-navigation
 
 ## User Preferences
 
