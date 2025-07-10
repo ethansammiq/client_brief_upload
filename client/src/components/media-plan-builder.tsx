@@ -223,7 +223,10 @@ export default function MediaPlanBuilder({
                     Product Type
                   </TableHead>
                   <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Targeting & Ad Sizes
+                    Targeting Details
+                  </TableHead>
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Ad Sizes
                   </TableHead>
                   <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                     CPM Rate
@@ -242,7 +245,7 @@ export default function MediaPlanBuilder({
               <TableBody>
                 {lineItems.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                    <TableCell colSpan={8} className="text-center py-8 text-gray-500">
                       No line items yet. Add products from the library to get started.
                     </TableCell>
                   </TableRow>
@@ -268,12 +271,12 @@ export default function MediaPlanBuilder({
                         </TableCell>
                         <TableCell className="max-w-sm">
                           <div className="text-xs text-gray-600">
-                            <div className="mb-1">
-                              <strong>Targeting:</strong> {product?.targetingDetails ? product.targetingDetails.substring(0, 120) + '...' : 'N/A'}
-                            </div>
-                            <div>
-                              <strong>Ad Sizes:</strong> {product?.adSizes || 'N/A'}
-                            </div>
+                            {product?.targetingDetails ? product.targetingDetails.substring(0, 100) + '...' : 'N/A'}
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-xs">
+                          <div className="text-xs text-gray-600">
+                            {product?.adSizes || 'N/A'}
                           </div>
                         </TableCell>
                         <TableCell>
