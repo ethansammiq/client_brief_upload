@@ -47,11 +47,15 @@ export default function RfpForm({ rfpResponse, onSuccess, children }: RfpFormPro
         return apiRequest("POST", "/api/rfp-responses", data);
       }
     },
-    onSuccess: (data) => {
+    onSuccess: async (response) => {
       queryClient.invalidateQueries({ queryKey: ['/api/rfp-responses'] });
       setOpen(false);
       form.reset();
+      
+      // Parse the response to get the actual data
+      const data = await response.json();
       onSuccess?.(data);
+      
       toast({
         title: isEditing ? "Updated" : "Created",
         description: `RFP response has been ${isEditing ? "updated" : "created"} successfully.`,
