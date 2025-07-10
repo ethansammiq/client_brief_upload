@@ -157,16 +157,11 @@ export default function MediaPlanBuilder({
 
   return (
     <div className="w-full">
-      {/* RFP Info and Controls */}
-      <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      {/* Version Controls */}
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">
-            {rfpResponse?.title || "Loading..."}
-          </h3>
-          <p className="text-sm text-gray-600">
-            Client: {rfpResponse?.clientName || "Loading..."} | 
-            Due: {rfpResponse?.dueDate || "Loading..."}
-          </p>
+          <h3 className="text-lg font-semibold text-gray-900">Media Plan Versions</h3>
+          <p className="text-sm text-gray-600">Manage different versions of your media plan</p>
         </div>
         <div className="flex items-center space-x-3">
           <Select 
