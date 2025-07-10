@@ -82,7 +82,7 @@ export default function Dashboard() {
               /* Media Plan Builder */
               (<>
                 {/* Campaign Title Header */}
-                <div className="text-white px-6 py-6 bg-[#2B0030]">
+                <div className="text-white px-6 py-6 bg-[#ffffff]">
                   <div className="max-w-7xl mx-auto">
                     <div className="flex items-center justify-between">
                       <div className="text-[#2b0030]">
