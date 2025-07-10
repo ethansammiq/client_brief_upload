@@ -39,7 +39,7 @@ export default function ProductLibrary({ selectedVersionId }: ProductLibraryProp
       const lineItem: InsertMediaPlanLineItem = {
         mediaPlanVersionId: selectedVersionId,
         productId: product.id,
-        lineItemName: `${product.name} Campaign`,
+        lineItemName: product.placementName,
         cpmRate: "25.00",
         impressions: 1000000,
         totalCost: "25000",

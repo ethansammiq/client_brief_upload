@@ -217,10 +217,13 @@ export default function MediaPlanBuilder({
               <TableHeader>
                 <TableRow className="bg-gray-50">
                   <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Line Item
+                    Line Item / Placement
                   </TableHead>
                   <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Product Type
+                  </TableHead>
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Targeting & Ad Sizes
                   </TableHead>
                   <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                     CPM Rate
@@ -239,7 +242,7 @@ export default function MediaPlanBuilder({
               <TableBody>
                 {lineItems.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                    <TableCell colSpan={7} className="text-center py-8 text-gray-500">
                       No line items yet. Add products from the library to get started.
                     </TableCell>
                   </TableRow>
@@ -248,11 +251,11 @@ export default function MediaPlanBuilder({
                     const product = getProductById(item.productId);
                     return (
                       <TableRow key={item.id} className="hover:bg-gray-50">
-                        <TableCell>
+                        <TableCell className="max-w-xs">
                           <Input
                             value={item.lineItemName}
                             onChange={(e) => handleLineItemUpdate(item, 'lineItemName', e.target.value)}
-                            className="w-full"
+                            className="w-full text-sm"
                           />
                         </TableCell>
                         <TableCell>
@@ -262,6 +265,16 @@ export default function MediaPlanBuilder({
                           >
                             {product?.name || 'Unknown'}
                           </Badge>
+                        </TableCell>
+                        <TableCell className="max-w-sm">
+                          <div className="text-xs text-gray-600">
+                            <div className="mb-1">
+                              <strong>Targeting:</strong> {product?.targetingDetails ? product.targetingDetails.substring(0, 120) + '...' : 'N/A'}
+                            </div>
+                            <div>
+                              <strong>Ad Sizes:</strong> {product?.adSizes || 'N/A'}
+                            </div>
+                          </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center">

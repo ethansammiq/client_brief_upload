@@ -4,6 +4,14 @@
 
 This is a full-stack TypeScript application for managing RFP (Request for Proposal) responses and media planning. The application allows users to create and manage RFP responses, build media plans with different versions, and manage product libraries for media planning campaigns.
 
+## Recent Changes
+
+- **July 10, 2025**: Enhanced media plan table with detailed product information
+  - Line items now default to placement names instead of generic campaign names
+  - Added targeting details and ad sizes columns to media plan display
+  - Improved table layout with better column spacing and readability
+  - Fixed React Query cache invalidation for real-time updates when adding products
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
