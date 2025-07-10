@@ -127,7 +127,7 @@ export default function ProductLibrary({ selectedVersionId }: ProductLibraryProp
         </div>
       </div>
 
-      {/* Products Grid */}
+      {/* Products Horizontal Scroll */}
       {productsLoading ? (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
@@ -141,50 +141,62 @@ export default function ProductLibrary({ selectedVersionId }: ProductLibraryProp
           <p className="text-gray-500">No products found matching your criteria</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer p-4"
-              onClick={() => handleAddToMediaPlan(product)}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <h4 className="font-semibold text-gray-900 mb-1">{product.name}</h4>
-                  <Badge variant="secondary" className={`${getCategoryColor(product.category)} text-xs`}>
-                    {product.category}
+        <div className="relative">
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {filteredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer p-4 min-w-[300px] flex-shrink-0"
+                onClick={() => handleAddToMediaPlan(product)}
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-900 mb-1">{product.name}</h4>
+                    <Badge variant="secondary" className={`${getCategoryColor(product.category)} text-xs`}>
+                      {product.category}
+                    </Badge>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    variant="ghost" 
+                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    disabled={addToMediaPlanMutation.isPending}
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+                
+                <div className="space-y-2 mb-3">
+                  <div className="text-xs text-gray-600">
+                    <span className="font-medium">Targeting:</span> {truncateText(product.targetingDetails, 60)}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    <span className="font-medium">Placement:</span> {truncateText(product.placementName, 40)}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    <span className="font-medium">Ad Sizes:</span> {truncateText(product.adSizes, 40)}
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <Badge variant="outline" className="text-xs font-medium text-gray-600">
+                    {product.pricingModel}
                   </Badge>
-                </div>
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
-                  className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                  disabled={addToMediaPlanMutation.isPending}
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-              
-              <div className="space-y-2 mb-3">
-                <div className="text-xs text-gray-600">
-                  <span className="font-medium">Targeting:</span> {truncateText(product.targetingDetails, 80)}
-                </div>
-                <div className="text-xs text-gray-600">
-                  <span className="font-medium">Placement:</span> {truncateText(product.placementName, 60)}
-                </div>
-                <div className="text-xs text-gray-600">
-                  <span className="font-medium">Ad Sizes:</span> {truncateText(product.adSizes, 60)}
+                  <span className="text-xs text-blue-600 font-medium">Click to add</span>
                 </div>
               </div>
-              
-              <div className="flex items-center justify-between">
-                <Badge variant="outline" className="text-xs font-medium text-gray-600">
-                  {product.pricingModel}
-                </Badge>
-                <span className="text-xs text-blue-600 font-medium">Click to add</span>
+            ))}
+          </div>
+          
+          {/* Scroll indicator */}
+          <div className="absolute top-1/2 right-0 transform -translate-y-1/2 text-gray-400 text-xs">
+            <div className="flex items-center space-x-1">
+              <span>Scroll</span>
+              <div className="w-4 h-4 border border-gray-300 rounded flex items-center justify-center">
+                <span className="text-xs">→</span>
               </div>
             </div>
-          ))}
+          </div>
         </div>
       )}
     </div>

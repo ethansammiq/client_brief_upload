@@ -98,6 +98,16 @@
   border-radius: 3px;
 }
 
+/* Hide scrollbar for horizontal product scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Opera */
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(215.4, 16.3%, 36.9%);
 }
