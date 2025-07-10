@@ -74,27 +74,42 @@ export default function Dashboard() {
             ) : (
               /* Media Plan Builder */
               <>
-                {/* Campaign Header */}
+                {/* Campaign Title Header */}
+                <div className="bg-gray-900 text-white px-6 py-6">
+                  <div className="max-w-7xl mx-auto">
+                    <h1 className="text-3xl font-bold mb-2">
+                      {currentRfp?.title || "Media Plan Builder"}
+                    </h1>
+                    <div className="flex items-center space-x-6 text-gray-300">
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium">Client:</span>
+                        <span className="ml-2 text-white">{currentRfp?.clientName || "Not specified"}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium">Due Date:</span>
+                        <span className="ml-2 text-white">{currentRfp?.dueDate || "Not specified"}</span>
+                      </div>
+                      {currentRfp?.budget && (
+                        <div className="flex items-center">
+                          <span className="text-sm font-medium">Budget:</span>
+                          <span className="ml-2 text-white">${currentRfp.budget.toLocaleString()}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Header */}
                 <div className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <Button
-                        variant="ghost"
-                        onClick={handleBackToLibrary}
-                        className="text-gray-600 hover:text-gray-900"
-                      >
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back to Library
-                      </Button>
-                      <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
-                          {currentRfp?.title || "Media Plan Builder"}
-                        </h1>
-                        <p className="text-gray-600 mt-1">
-                          {currentRfp?.clientName ? `${currentRfp.clientName} • Due: ${currentRfp.dueDate}` : "Create comprehensive media plans for client proposals"}
-                        </p>
-                      </div>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      onClick={handleBackToLibrary}
+                      className="text-gray-600 hover:text-gray-900"
+                    >
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                      Back to Library
+                    </Button>
                     <div className="flex items-center space-x-3">
                       <Button 
                         variant="outline" 
