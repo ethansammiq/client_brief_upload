@@ -102,7 +102,7 @@ export default function Dashboard() {
                       <Button
                         variant="outline"
                         onClick={handleBackToLibrary}
-                        className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white"
+                        className="border-gray-600 hover:bg-gray-800 hover:text-white text-[#111827]"
                       >
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Back to Library
