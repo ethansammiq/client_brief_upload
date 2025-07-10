@@ -6,40 +6,38 @@ export default function TopNavigation() {
   const navItems = [
     { name: "Intelligence", active: false },
     { name: "Audiences", active: false },
-    { name: "Creatives", active: true },
+    { name: "Creatives", active: false },
     { name: "Campaigns", active: false },
     { name: "Reports", active: false },
-    { name: "Plan", active: false }
+    { name: "Plan", active: true }
   ];
 
   return (
     <header className="bg-[#2B1B3D] text-white border-b border-gray-800">
       {/* Top bar with logo and user info */}
       <div className="flex items-center justify-between px-6 py-3">
-        <div className="flex items-center space-x-6">
-          {/* MiQ Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded flex items-center justify-center">
-              <span className="text-black font-bold text-sm">Σ</span>
-            </div>
+        {/* MiQ Logo */}
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded flex items-center justify-center">
+            <span className="text-black font-bold text-sm">Σ</span>
           </div>
-          
-          {/* Navigation Items */}
-          <nav className="flex space-x-8">
-            {navItems.map((item) => (
-              <button
-                key={item.name}
-                className={`text-sm font-medium transition-colors duration-200 ${
-                  item.active
-                    ? "text-yellow-400 border-b-2 border-yellow-400 pb-1"
-                    : "text-gray-300 hover:text-white"
-                }`}
-              >
-                {item.name}
-              </button>
-            ))}
-          </nav>
         </div>
+        
+        {/* Centered Navigation Items */}
+        <nav className="flex space-x-8">
+          {navItems.map((item) => (
+            <button
+              key={item.name}
+              className={`text-sm font-medium transition-colors duration-200 ${
+                item.active
+                  ? "text-yellow-400 border-b-2 border-yellow-400 pb-1"
+                  : "text-gray-300 hover:text-white"
+              }`}
+            >
+              {item.name}
+            </button>
+          ))}
+        </nav>
 
         {/* Right side - User info and actions */}
         <div className="flex items-center space-x-4">
