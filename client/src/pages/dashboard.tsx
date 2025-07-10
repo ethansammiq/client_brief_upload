@@ -21,12 +21,12 @@ export default function Dashboard() {
   });
 
   const { data: currentRfp } = useQuery<RfpResponse>({
-    queryKey: ['/api/rfp-responses', selectedRfpId],
+    queryKey: [`/api/rfp-responses/${selectedRfpId}`],
     enabled: !!selectedRfpId,
   });
 
   const { data: mediaPlanVersions = [] } = useQuery<MediaPlanVersion[]>({
-    queryKey: ['/api/rfp-responses', selectedRfpId, 'media-plan-versions'],
+    queryKey: [`/api/rfp-responses/${selectedRfpId}/media-plan-versions`],
     enabled: !!selectedRfpId,
   });
 

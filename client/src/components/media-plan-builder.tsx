@@ -75,7 +75,7 @@ export default function MediaPlanBuilder({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ 
-        queryKey: ['/api/rfp-responses', rfpResponse?.id, 'media-plan-versions'] 
+        queryKey: [`/api/rfp-responses/${rfpResponse?.id}/media-plan-versions`] 
       });
       toast({
         title: "Version Created",
