@@ -142,152 +142,187 @@ export default function AddProductModal({ product, selectedVersionId, children }
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Add {product.name} to Media Plan</DialogTitle>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="space-y-3 pb-4">
+          <DialogTitle className="text-2xl font-bold text-gray-900">
+            Add {product.name} to Media Plan
+          </DialogTitle>
+          <p className="text-sm text-gray-600">
+            Configure the campaign details for this product placement
+          </p>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <FormLabel>Site</FormLabel>
-                <div className="mt-1 p-3 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700">
-                  MiQ
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Basic Information */}
+            <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">Basic Information</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <FormLabel className="text-sm font-medium text-gray-700">Site</FormLabel>
+                  <div className="mt-1 p-3 bg-white border border-gray-200 rounded-md text-sm text-gray-900 font-medium">
+                    MiQ
+                  </div>
                 </div>
-              </div>
-              <FormField
-                control={form.control}
-                name="placementName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Placement Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter placement name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <FormLabel>Targeting Details</FormLabel>
-                <div className="mt-1 p-3 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700">
-                  {product.targetingDetails || "No targeting details specified"}
-                </div>
-              </div>
-              
-              <div>
-                <FormLabel>Ad Sizes</FormLabel>
-                <div className="mt-1 p-3 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700">
-                  {product.adSizes || "No ad sizes specified"}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="startDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Start Date</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="endDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End Date</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="rateModel"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Rate Model</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormField
+                  control={form.control}
+                  name="placementName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">Placement Name</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select rate model" />
-                        </SelectTrigger>
+                        <Input 
+                          placeholder="Enter placement name" 
+                          className="mt-1 h-11"
+                          {...field} 
+                        />
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="CPM">CPM</SelectItem>
-                        <SelectItem value="dCPM">dCPM</SelectItem>
-                        <SelectItem value="CPCV">CPCV</SelectItem>
-                        <SelectItem value="CPC">CPC</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="rate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Rate ($)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01" 
-                        placeholder="0.00" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="units"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Units</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        placeholder="1000000" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
 
-            <div className="flex justify-end space-x-2 pt-4">
+            {/* Product Information */}
+            <div className="bg-blue-50 p-4 rounded-lg space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">Product Information</h3>
+              <div className="space-y-4">
+                <div>
+                  <FormLabel className="text-sm font-medium text-gray-700">Targeting Details</FormLabel>
+                  <div className="mt-1 p-3 bg-white border border-gray-200 rounded-md text-sm text-gray-700 leading-relaxed">
+                    {product.targetingDetails || "No targeting details specified"}
+                  </div>
+                </div>
+                
+                <div>
+                  <FormLabel className="text-sm font-medium text-gray-700">Ad Sizes</FormLabel>
+                  <div className="mt-1 p-3 bg-white border border-gray-200 rounded-md text-sm text-gray-700">
+                    <div className="flex flex-wrap gap-2">
+                      {(product.adSizes || "No ad sizes specified").split(',').map((size, index) => (
+                        <span key={index} className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded">
+                          {size.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Campaign Schedule */}
+            <div className="bg-green-50 p-4 rounded-lg space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">Campaign Schedule</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="startDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">Start Date</FormLabel>
+                      <FormControl>
+                        <Input type="date" className="mt-1 h-11" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="endDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">End Date</FormLabel>
+                      <FormControl>
+                        <Input type="date" className="mt-1 h-11" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Pricing Information */}
+            <div className="bg-purple-50 p-4 rounded-lg space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">Pricing Information</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="rateModel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">Rate Model</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="mt-1 h-11">
+                            <SelectValue placeholder="Select rate model" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="CPM">CPM</SelectItem>
+                          <SelectItem value="dCPM">dCPM</SelectItem>
+                          <SelectItem value="CPCV">CPCV</SelectItem>
+                          <SelectItem value="CPC">CPC</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="rate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">Rate ($)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          step="0.01" 
+                          placeholder="0.00" 
+                          className="mt-1 h-11"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="units"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-gray-700">Units</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="1,000,000" 
+                          className="mt-1 h-11"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
               <Button 
                 type="button" 
                 variant="outline" 
                 onClick={() => setOpen(false)}
+                className="px-6 py-2 h-11"
               >
                 Cancel
               </Button>
               <Button 
                 type="submit" 
                 disabled={addToMediaPlanMutation.isPending}
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-green-600 hover:bg-green-700 px-6 py-2 h-11"
               >
                 {addToMediaPlanMutation.isPending ? "Adding..." : "Add to Media Plan"}
               </Button>
