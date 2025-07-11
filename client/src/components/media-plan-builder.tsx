@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Copy, Edit, Trash2 } from "lucide-react";
+import { Plus, Copy, Edit, Trash2, X } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { 
@@ -137,6 +137,28 @@ export default function MediaPlanBuilder({
       toast({
         title: "Plan Duplicated",
         description: "Media plan has been duplicated successfully.",
+      });
+    },
+  });
+
+  const deleteVersionMutation = useMutation({
+    mutationFn: async (versionId: number) => {
+      return apiRequest("DELETE", `/api/media-plan-versions/${versionId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ 
+        queryKey: [`/api/rfp-responses/${rfpResponse?.id}/media-plan-versions`] 
+      });
+      
+      // Switch to the first available version after deletion
+      const remainingVersions = mediaPlanVersions.filter(v => v.id !== selectedVersionId);
+      if (remainingVersions.length > 0) {
+        onVersionChange(remainingVersions[0].id);
+      }
+      
+      toast({
+        title: "Version Deleted",
+        description: "Media plan version has been deleted successfully.",
       });
     },
   });
@@ -261,6 +283,17 @@ export default function MediaPlanBuilder({
             <Plus className="w-4 h-4 mr-2" />
             New Version
           </Button>
+          {mediaPlanVersions.length > 1 && (
+            <Button
+              onClick={() => deleteVersionMutation.mutate(selectedVersionId)}
+              disabled={deleteVersionMutation.isPending}
+              variant="outline"
+              className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete Version
+            </Button>
+          )}
         </div>
       </div>
 
