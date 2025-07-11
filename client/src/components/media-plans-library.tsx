@@ -149,7 +149,7 @@ function MediaPlanCard({ plan, onSelectPlan }: MediaPlanCardProps) {
           <div className="flex items-center justify-between pt-2">
             <Button
               onClick={() => onSelectPlan(plan.id)}
-              className="flex-1 mr-2 bg-blue-600 hover:bg-blue-700"
+              className="flex-1 mr-2 hover:bg-blue-700 bg-[#7c33b6]"
             >
               Open Plan
             </Button>
