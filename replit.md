@@ -76,6 +76,13 @@ This is a full-stack TypeScript application for managing RFP (Request for Propos
     - Fixed field mapping issues to match database schema (version.title, lineItemName, totalCost, cpmRate)
     - Robust error handling with fallback worksheets for failed versions
     - Clean export structure with professional formatting suitable for client delivery
+  - **Date Format Standardization - COMPLETED**
+    - Updated all date displays throughout the application to use MM-DD-YY format
+    - Campaign header now shows due date and campaign dates in MM-DD-YY format
+    - Media plan table displays start/end dates in MM-DD-YY format
+    - Media plans library cards show due dates in MM-DD-YY format
+    - Excel export includes all dates formatted as MM-DD-YY for consistency
+    - Maintained date input functionality while standardizing display format
 
 - **July 10, 2025**: Complete Media Planner redesign with card-based layout
   - Redesigned entire Media Planner tab with modern card-based layout inspired by MiQ platform

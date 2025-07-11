@@ -754,7 +754,15 @@ export default function MediaPlanBuilder({
                               className="w-full text-sm"
                             />
                           ) : (
-                            <span className="text-sm text-gray-900">{item.startDate || '-'}</span>
+                            <span className="text-sm text-gray-900">
+                              {item.startDate 
+                                ? new Date(item.startDate).toLocaleDateString('en-US', { 
+                                    month: '2-digit', 
+                                    day: '2-digit', 
+                                    year: '2-digit' 
+                                  })
+                                : '-'}
+                            </span>
                           )}
                         </TableCell>
                         {/* End Date */}
@@ -767,7 +775,15 @@ export default function MediaPlanBuilder({
                               className="w-full text-sm"
                             />
                           ) : (
-                            <span className="text-sm text-gray-900">{item.endDate || '-'}</span>
+                            <span className="text-sm text-gray-900">
+                              {item.endDate 
+                                ? new Date(item.endDate).toLocaleDateString('en-US', { 
+                                    month: '2-digit', 
+                                    day: '2-digit', 
+                                    year: '2-digit' 
+                                  })
+                                : '-'}
+                            </span>
                           )}
                         </TableCell>
                         {/* Rate Model */}

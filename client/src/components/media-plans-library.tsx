@@ -110,7 +110,11 @@ function MediaPlanCard({ plan, onSelectPlan }: MediaPlanCardProps) {
           
           <div className="flex items-center text-sm text-gray-500">
             <Calendar className="w-4 h-4 mr-1" />
-            Due: {new Date(plan.dueDate).toLocaleDateString()}
+            Due: {new Date(plan.dueDate).toLocaleDateString('en-US', { 
+              month: '2-digit', 
+              day: '2-digit', 
+              year: '2-digit' 
+            })}
           </div>
 
           {plan.objectives && (

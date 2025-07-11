@@ -77,9 +77,27 @@ export default function Dashboard() {
         [''],
         ['Campaign Title', currentRfp.title],
         ['Client', currentRfp.clientName],
-        ['Due Date', currentRfp.dueDate],
-        ['Campaign Start Date', currentRfp.campaignStartDate || 'Not specified'],
-        ['Campaign End Date', currentRfp.campaignEndDate || 'Not specified'],
+        ['Due Date', currentRfp.dueDate 
+          ? new Date(currentRfp.dueDate).toLocaleDateString('en-US', { 
+              month: '2-digit', 
+              day: '2-digit', 
+              year: '2-digit' 
+            })
+          : 'Not specified'],
+        ['Campaign Start Date', currentRfp.campaignStartDate 
+          ? new Date(currentRfp.campaignStartDate).toLocaleDateString('en-US', { 
+              month: '2-digit', 
+              day: '2-digit', 
+              year: '2-digit' 
+            })
+          : 'Not specified'],
+        ['Campaign End Date', currentRfp.campaignEndDate 
+          ? new Date(currentRfp.campaignEndDate).toLocaleDateString('en-US', { 
+              month: '2-digit', 
+              day: '2-digit', 
+              year: '2-digit' 
+            })
+          : 'Not specified'],
         ['Total Budget', currentRfp.totalBudget || 'Not specified'],
         ['Target Audience', currentRfp.targetAudience || 'Not specified'],
         [''],
@@ -142,8 +160,20 @@ export default function Dashboard() {
               item.totalCost || '',
               item.impressions || '',
               item.cpmRate || '',
-              item.startDate || '',
-              item.endDate || '',
+              item.startDate 
+                ? new Date(item.startDate).toLocaleDateString('en-US', { 
+                    month: '2-digit', 
+                    day: '2-digit', 
+                    year: '2-digit' 
+                  })
+                : '',
+              item.endDate 
+                ? new Date(item.endDate).toLocaleDateString('en-US', { 
+                    month: '2-digit', 
+                    day: '2-digit', 
+                    year: '2-digit' 
+                  })
+                : '',
               item.targetingDetails || ''
             ];
             data.push(row);
@@ -179,7 +209,11 @@ export default function Dashboard() {
       }
 
       // Generate file and save
-      const fileName = `${currentRfp.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_')}_MediaPlan_${new Date().toISOString().split('T')[0]}.xlsx`;
+      const fileName = `${currentRfp.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_')}_MediaPlan_${new Date().toLocaleDateString('en-US', { 
+        month: '2-digit', 
+        day: '2-digit', 
+        year: '2-digit' 
+      }).replace(/\//g, '-')}.xlsx`;
       const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       
@@ -242,13 +276,29 @@ export default function Dashboard() {
                           </div>
                           <div className="flex items-center text-[#2b0030]">
                             <span className="text-sm font-medium">Due Date:</span>
-                            <span className="ml-2 text-[#2b0030]">{currentRfp?.dueDate || "Not specified"}</span>
+                            <span className="ml-2 text-[#2b0030]">
+                              {currentRfp?.dueDate 
+                                ? new Date(currentRfp.dueDate).toLocaleDateString('en-US', { 
+                                    month: '2-digit', 
+                                    day: '2-digit', 
+                                    year: '2-digit' 
+                                  })
+                                : "Not specified"}
+                            </span>
                           </div>
                           <div className="flex items-center text-[#2b0030]">
                             <span className="text-sm font-medium">Campaign:</span>
                             <span className="ml-2 text-[#2b0030]">
                               {currentRfp?.campaignStartDate && currentRfp?.campaignEndDate 
-                                ? `${currentRfp.campaignStartDate} - ${currentRfp.campaignEndDate}`
+                                ? `${new Date(currentRfp.campaignStartDate).toLocaleDateString('en-US', { 
+                                    month: '2-digit', 
+                                    day: '2-digit', 
+                                    year: '2-digit' 
+                                  })} - ${new Date(currentRfp.campaignEndDate).toLocaleDateString('en-US', { 
+                                    month: '2-digit', 
+                                    day: '2-digit', 
+                                    year: '2-digit' 
+                                  })}`
                                 : "Not specified"}
                             </span>
                           </div>
