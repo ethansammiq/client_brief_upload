@@ -130,10 +130,7 @@ export default function YouTubePackageModal({
 
       // Add each line item
       const promises = lineItems.map(lineItem => 
-        apiRequest("/api/line-items", {
-          method: "POST",
-          body: JSON.stringify(lineItem),
-        })
+        apiRequest("POST", "/api/line-items", lineItem)
       );
 
       return Promise.all(promises);
