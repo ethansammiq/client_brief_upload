@@ -225,103 +225,106 @@ export default function AddProductModal({ product, selectedVersionId, children }
               </div>
             </div>
 
-            {/* Campaign Schedule */}
-            <div className="bg-green-50 p-4 rounded-lg space-y-3">
-              <h3 className="text-base font-semibold text-gray-900">Campaign Schedule</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="startDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">Start Date</FormLabel>
-                      <FormControl>
-                        <Input type="date" className="h-9" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="endDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">End Date</FormLabel>
-                      <FormControl>
-                        <Input type="date" className="h-9" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            {/* Pricing Information */}
-            <div className="bg-purple-50 p-4 rounded-lg space-y-3">
-              <h3 className="text-base font-semibold text-gray-900">Pricing Information</h3>
-              <div className="grid grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="rateModel"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">Rate Model</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+            {/* Campaign Schedule & Pricing Information */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Campaign Schedule */}
+              <div className="bg-green-50 p-4 rounded-lg space-y-3">
+                <h3 className="text-base font-semibold text-gray-900">Campaign Schedule</h3>
+                <div className="space-y-3">
+                  <FormField
+                    control={form.control}
+                    name="startDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">Start Date</FormLabel>
                         <FormControl>
-                          <SelectTrigger className="h-9">
-                            <SelectValue placeholder="Select rate model" />
-                          </SelectTrigger>
+                          <Input type="date" className="h-9" {...field} />
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value="CPM">CPM</SelectItem>
-                          <SelectItem value="dCPM">dCPM</SelectItem>
-                          <SelectItem value="CPCV">CPCV</SelectItem>
-                          <SelectItem value="CPC">CPC</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="rate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">Rate ($)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number" 
-                          step="0.01" 
-                          placeholder="0.00" 
-                          className="h-9"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="units"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">Units</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="number" 
-                          placeholder="1,000,000" 
-                          className="h-9"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="endDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">End Date</FormLabel>
+                        <FormControl>
+                          <Input type="date" className="h-9" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Pricing Information */}
+              <div className="bg-purple-50 p-4 rounded-lg space-y-3">
+                <h3 className="text-base font-semibold text-gray-900">Pricing Information</h3>
+                <div className="space-y-3">
+                  <FormField
+                    control={form.control}
+                    name="rateModel"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">Rate Model</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="h-9">
+                              <SelectValue placeholder="Select rate model" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="CPM">CPM</SelectItem>
+                            <SelectItem value="dCPM">dCPM</SelectItem>
+                            <SelectItem value="CPCV">CPCV</SelectItem>
+                            <SelectItem value="CPC">CPC</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="rate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">Rate ($)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            step="0.01" 
+                            placeholder="0.00" 
+                            className="h-9"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="units"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700 mb-1 block">Units</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            placeholder="1,000,000" 
+                            className="h-9"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </div>
 
