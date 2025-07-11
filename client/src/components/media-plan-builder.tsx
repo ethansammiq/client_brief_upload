@@ -281,7 +281,7 @@ export default function MediaPlanBuilder({
                   lineItems.map((item) => {
                     const product = getProductById(item.productId);
                     return (
-                      <TableRow key={item.id} className="hover:bg-gray-50">
+                      <TableRow key={item.id} className="hover:bg-gray-50 h-16">
                         {/* Site */}
                         <TableCell>
                           {editingLineItem === item.id ? (
@@ -318,9 +318,9 @@ export default function MediaPlanBuilder({
                               placeholder="Targeting details"
                             />
                           ) : (
-                            <span className="text-sm text-gray-600 max-w-[200px] truncate inline-block">
+                            <div className="max-w-[200px] h-12 overflow-y-auto text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2">
                               {item.targetingDetails || product?.targetingDetails || '-'}
-                            </span>
+                            </div>
                           )}
                         </TableCell>
                         {/* Ad Sizes */}
@@ -333,7 +333,18 @@ export default function MediaPlanBuilder({
                               placeholder="Ad sizes"
                             />
                           ) : (
-                            <span className="text-sm text-gray-900">{item.adSizes || product?.adSizes || '-'}</span>
+                            <span className="text-sm text-gray-900">
+                              {(item.adSizes || product?.adSizes || '-').split(',').map((size, index) => (
+                                <span key={index}>
+                                  {index > 0 && ', '}
+                                  {size.trim().includes('x') ? (
+                                    <span className="font-semibold">{size.trim()}</span>
+                                  ) : (
+                                    size.trim()
+                                  )}
+                                </span>
+                              ))}
+                            </span>
                           )}
                         </TableCell>
                         {/* Start Date */}
