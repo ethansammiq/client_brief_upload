@@ -49,8 +49,7 @@ export default function MediaPlanBuilder({
 
   // Debug logging
   console.log('Line items:', lineItems);
-  console.log('Selected version ID:', selectedVersionId);
-  console.log('Is loading:', isLineItemsLoading);
+  console.log('Grouped result:', groupLineItems());
 
   const createVersionMutation = useMutation({
     mutationFn: async () => {
@@ -259,12 +258,75 @@ export default function MediaPlanBuilder({
 
   // Group YouTube package line items
   const groupLineItems = () => {
-    // Temporarily show all items as individual to debug
-    const grouped = lineItems.map(item => ({
-      type: 'individual' as const,
-      items: [item]
-    }));
-    console.log('Grouped items:', grouped);
+    const grouped: Array<{
+      type: 'package' | 'individual';
+      packageName?: string;
+      productId?: number;
+      sharedData?: {
+        targetingDetails: string;
+        startDate: string;
+        endDate: string;
+        rateModel: string;
+        cpmRate: string;
+        totalUnits: number;
+        totalCost: string;
+      };
+      items: MediaPlanLineItem[];
+    }> = [];
+
+    // Group YouTube packages by package name
+    const youtubePackages = new Map<string, MediaPlanLineItem[]>();
+    const individualItems: MediaPlanLineItem[] = [];
+
+    lineItems.forEach(item => {
+      // Check if it's a YouTube package item by looking at the line item name pattern
+      if (item.lineItemName.includes('YouTube') && item.lineItemName.includes(' - ')) {
+        // Extract package name from line item name (e.g., "YouTube - Relevance Package")
+        const packageMatch = item.lineItemName.match(/^(.*?)\s-\s/);
+        const packageName = packageMatch ? packageMatch[1] : 'YouTube Package';
+        
+        if (!youtubePackages.has(packageName)) {
+          youtubePackages.set(packageName, []);
+        }
+        youtubePackages.get(packageName)!.push(item);
+      } else {
+        individualItems.push(item);
+      }
+    });
+
+    // Add individual items first
+    individualItems.forEach(item => {
+      grouped.push({
+        type: 'individual',
+        items: [item]
+      });
+    });
+
+    // Add grouped YouTube packages
+    youtubePackages.forEach((packageItems, packageName) => {
+      if (packageItems.length > 0) {
+        const firstItem = packageItems[0];
+        const totalUnits = packageItems.reduce((sum, item) => sum + item.impressions, 0);
+        const totalCost = packageItems.reduce((sum, item) => sum + parseFloat(item.totalCost), 0);
+        
+        grouped.push({
+          type: 'package',
+          packageName,
+          productId: firstItem.productId,
+          sharedData: {
+            targetingDetails: firstItem.targetingDetails || '',
+            startDate: firstItem.startDate || '',
+            endDate: firstItem.endDate || '',
+            rateModel: firstItem.rateModel || 'dCPM',
+            cpmRate: firstItem.cpmRate || '0',
+            totalUnits,
+            totalCost: totalCost.toFixed(2)
+          },
+          items: packageItems
+        });
+      }
+    });
+
     return grouped;
   };
 
