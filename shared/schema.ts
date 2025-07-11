@@ -10,6 +10,8 @@ export const products = pgTable("products", {
   placementName: text("placement_name").notNull(),
   adSizes: text("ad_sizes").notNull(),
   pricingModel: text("pricing_model").notNull(),
+  isPackage: boolean("is_package").notNull().default(false),
+  packagePlacements: text("package_placements"), // JSON string of child placements
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

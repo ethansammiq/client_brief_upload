@@ -174,6 +174,8 @@ export class MemStorage implements IStorage {
       const productWithId: Product = {
         id: this.productIdCounter++,
         ...product,
+        isPackage: false,
+        packagePlacements: null,
         createdAt: new Date()
       };
       this.products.set(productWithId.id, productWithId);
@@ -224,6 +226,8 @@ export class MemStorage implements IStorage {
     const newProduct: Product = {
       id: this.productIdCounter++,
       ...product,
+      isPackage: product.isPackage || false,
+      packagePlacements: product.packagePlacements || null,
       createdAt: new Date()
     };
     this.products.set(newProduct.id, newProduct);

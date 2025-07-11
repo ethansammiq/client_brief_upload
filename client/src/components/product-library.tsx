@@ -11,10 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Filter, Plus, Eye, Edit } from "lucide-react";
+import { Search, Filter, Plus, Eye, Edit, Package } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import AddProductModal from "@/components/add-product-modal";
+import YouTubePackageModal from "@/components/youtube-package-modal";
 import type { Product, InsertMediaPlanLineItem } from "@shared/schema";
 
 interface ProductLibraryProps {
@@ -121,25 +122,50 @@ export default function ProductLibrary({ selectedVersionId, campaignStartDate, c
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900 mb-1">{product.name}</h4>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-semibold text-gray-900">{product.name}</h4>
+                      {product.isPackage && (
+                        <Badge variant="outline" className="text-xs bg-orange-50 text-orange-600 border-orange-200">
+                          <Package className="w-3 h-3 mr-1" />
+                          Package
+                        </Badge>
+                      )}
+                    </div>
                     <Badge variant="secondary" className={`${getCategoryColor(product.category)} text-xs`}>
                       {product.category}
                     </Badge>
                   </div>
-                  <AddProductModal 
-                    product={product} 
-                    selectedVersionId={selectedVersionId}
-                    campaignStartDate={campaignStartDate}
-                    campaignEndDate={campaignEndDate}
-                  >
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
-                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                  {product.isPackage ? (
+                    <YouTubePackageModal 
+                      product={product} 
+                      selectedVersionId={selectedVersionId}
+                      campaignStartDate={campaignStartDate}
+                      campaignEndDate={campaignEndDate}
                     >
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </AddProductModal>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                      >
+                        <Package className="w-4 h-4" />
+                      </Button>
+                    </YouTubePackageModal>
+                  ) : (
+                    <AddProductModal 
+                      product={product} 
+                      selectedVersionId={selectedVersionId}
+                      campaignStartDate={campaignStartDate}
+                      campaignEndDate={campaignEndDate}
+                    >
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </AddProductModal>
+                  )}
                 </div>
                 
                 <div className="space-y-2 mb-3">
