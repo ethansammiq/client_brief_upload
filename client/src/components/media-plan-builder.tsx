@@ -251,76 +251,11 @@ export default function MediaPlanBuilder({
 
   // Group YouTube package line items
   const groupLineItems = () => {
-    const grouped: Array<{
-      type: 'package' | 'individual';
-      packageName?: string;
-      productId?: number;
-      sharedData?: {
-        targetingDetails: string;
-        startDate: string;
-        endDate: string;
-        rateModel: string;
-        cpmRate: string;
-        totalUnits: number;
-        totalCost: string;
-      };
-      items: MediaPlanLineItem[];
-    }> = [];
-
-    // First, identify YouTube packages
-    const youtubePackages = new Map<string, MediaPlanLineItem[]>();
-    const individualItems: MediaPlanLineItem[] = [];
-
-    lineItems.forEach(item => {
-      const product = getProductById(item.productId);
-      if (product?.isPackage && item.lineItemName.includes('YouTube')) {
-        // Extract package name from line item name
-        const packageMatch = item.lineItemName.match(/^(.*?)\s-\s/);
-        const packageName = packageMatch ? packageMatch[1] : item.lineItemName;
-        
-        if (!youtubePackages.has(packageName)) {
-          youtubePackages.set(packageName, []);
-        }
-        youtubePackages.get(packageName)!.push(item);
-      } else {
-        individualItems.push(item);
-      }
-    });
-
-    // Add individual items first
-    individualItems.forEach(item => {
-      grouped.push({
-        type: 'individual',
-        items: [item]
-      });
-    });
-
-    // Add grouped YouTube packages
-    youtubePackages.forEach((packageItems, packageName) => {
-      if (packageItems.length > 0) {
-        const firstItem = packageItems[0];
-        const totalUnits = packageItems.reduce((sum, item) => sum + item.impressions, 0);
-        const totalCost = packageItems.reduce((sum, item) => sum + parseFloat(item.totalCost), 0);
-        
-        grouped.push({
-          type: 'package',
-          packageName,
-          productId: firstItem.productId,
-          sharedData: {
-            targetingDetails: firstItem.targetingDetails || '',
-            startDate: firstItem.startDate || '',
-            endDate: firstItem.endDate || '',
-            rateModel: firstItem.rateModel || 'dCPM',
-            cpmRate: firstItem.cpmRate || '0',
-            totalUnits,
-            totalCost: totalCost.toFixed(2)
-          },
-          items: packageItems
-        });
-      }
-    });
-
-    return grouped;
+    // Temporarily show all items as individual to debug
+    return lineItems.map(item => ({
+      type: 'individual' as const,
+      items: [item]
+    }));
   };
 
   const calculateTotals = () => {
