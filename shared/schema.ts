@@ -47,6 +47,7 @@ export const mediaPlanLineItems = pgTable("media_plan_line_items", {
   adSizes: text("ad_sizes").notNull().default(""),
   startDate: text("start_date").notNull().default(""),
   endDate: text("end_date").notNull().default(""),
+  rateModel: text("rate_model").notNull().default("CPM"),
   cpmRate: decimal("cpm_rate", { precision: 10, scale: 2 }).notNull(),
   flatRate: decimal("flat_rate", { precision: 12, scale: 2 }).notNull().default("0"),
   impressions: integer("impressions").notNull(),

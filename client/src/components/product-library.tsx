@@ -14,6 +14,7 @@ import {
 import { Search, Filter, Plus, Eye, Edit } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import AddProductModal from "@/components/add-product-modal";
 import type { Product, InsertMediaPlanLineItem } from "@shared/schema";
 
 interface ProductLibraryProps {
@@ -34,45 +35,7 @@ export default function ProductLibrary({ selectedVersionId }: ProductLibraryProp
     queryKey: ['/api/categories'],
   });
 
-  const addToMediaPlanMutation = useMutation({
-    mutationFn: async (product: Product) => {
-      const lineItem: InsertMediaPlanLineItem = {
-        mediaPlanVersionId: selectedVersionId,
-        productId: product.id,
-        lineItemName: product.placementName,
-        site: "",
-        placementName: product.placementName,
-        targetingDetails: product.targetingDetails,
-        adSizes: product.adSizes,
-        startDate: "",
-        endDate: "",
-        cpmRate: "25.00",
-        flatRate: "0",
-        impressions: 1000000,
-        totalCost: "25000",
-        sortOrder: 0,
-      };
-      
-      return apiRequest("POST", "/api/line-items", lineItem);
-    },
-    onSuccess: () => {
-      // Invalidate the line items query with the correct key
-      queryClient.invalidateQueries({ 
-        queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`] 
-      });
-      toast({
-        title: "Product Added",
-        description: "Product has been added to your media plan.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to add product to media plan.",
-        variant: "destructive",
-      });
-    },
-  });
+
 
   const getCategoryColor = (category: string) => {
     const colors = {
@@ -100,9 +63,7 @@ export default function ProductLibrary({ selectedVersionId }: ProductLibraryProp
     return matchesSearch && matchesCategory;
   });
 
-  const handleAddToMediaPlan = (product: Product) => {
-    addToMediaPlanMutation.mutate(product);
-  };
+
 
   return (
     <div className="w-full">
@@ -153,8 +114,8 @@ export default function ProductLibrary({ selectedVersionId }: ProductLibraryProp
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer p-4 min-w-[300px] flex-shrink-0"
-                onClick={() => handleAddToMediaPlan(product)}
+                className="bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all p-4 min-w-[300px] flex-shrink-0"
+
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
@@ -163,14 +124,18 @@ export default function ProductLibrary({ selectedVersionId }: ProductLibraryProp
                       {product.category}
                     </Badge>
                   </div>
-                  <Button 
-                    size="sm" 
-                    variant="ghost" 
-                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                    disabled={addToMediaPlanMutation.isPending}
+                  <AddProductModal 
+                    product={product} 
+                    selectedVersionId={selectedVersionId}
                   >
-                    <Plus className="w-4 h-4" />
-                  </Button>
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </AddProductModal>
                 </div>
                 
                 <div className="space-y-2 mb-3">

@@ -146,18 +146,27 @@ export default function MediaPlanBuilder({
   const handleLineItemUpdate = (lineItem: MediaPlanLineItem, field: string, value: string | number) => {
     const updatedItem = { ...lineItem, [field]: value };
     
-    // Calculate total cost based on CPM rate and impressions, or use flat rate if specified
-    if (field === 'cpmRate' || field === 'impressions' || field === 'flatRate') {
-      const cpm = parseFloat(updatedItem.cpmRate || '0');
-      const impressions = updatedItem.impressions || 0;
-      const flatRate = parseFloat(updatedItem.flatRate || '0');
+    // Calculate total cost based on rate model
+    if (field === 'cpmRate' || field === 'impressions' || field === 'rateModel') {
+      const rate = parseFloat(updatedItem.cpmRate || '0');
+      const units = updatedItem.impressions || 0;
+      const rateModel = updatedItem.rateModel || 'CPM';
       
-      // If flat rate is specified, use it; otherwise calculate from CPM
-      if (flatRate > 0) {
-        updatedItem.totalCost = flatRate.toFixed(2);
-      } else {
-        updatedItem.totalCost = ((cpm * impressions) / 1000).toFixed(2);
+      let totalCost = 0;
+      switch (rateModel) {
+        case 'CPM':
+        case 'dCPM':
+          totalCost = (rate * units) / 1000;
+          break;
+        case 'CPCV':
+        case 'CPC':
+          totalCost = rate * units;
+          break;
+        default:
+          totalCost = (rate * units) / 1000;
       }
+      
+      updatedItem.totalCost = totalCost.toFixed(2);
     }
     
     updateLineItemMutation.mutate({ id: lineItem.id, data: updatedItem });
@@ -245,7 +254,7 @@ export default function MediaPlanBuilder({
                     End Date
                   </TableHead>
                   <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
-                    Rate ($/cpm)
+                    Rate (Model)
                   </TableHead>
                   <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
                     Rate ($)
@@ -327,24 +336,30 @@ export default function MediaPlanBuilder({
                             className="w-full text-sm"
                           />
                         </TableCell>
-                        {/* Rate ($/cpm) */}
+                        {/* Rate Model */}
+                        <TableCell>
+                          <Select 
+                            value={item.rateModel || 'CPM'} 
+                            onValueChange={(value) => handleLineItemUpdate(item, 'rateModel', value)}
+                          >
+                            <SelectTrigger className="w-full">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="CPM">CPM</SelectItem>
+                              <SelectItem value="dCPM">dCPM</SelectItem>
+                              <SelectItem value="CPCV">CPCV</SelectItem>
+                              <SelectItem value="CPC">CPC</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                        {/* Rate ($) */}
                         <TableCell>
                           <Input
                             type="number"
                             step="0.01"
                             value={item.cpmRate}
                             onChange={(e) => handleLineItemUpdate(item, 'cpmRate', e.target.value)}
-                            className="w-full text-sm"
-                            placeholder="0.00"
-                          />
-                        </TableCell>
-                        {/* Rate ($) - Flat Rate */}
-                        <TableCell>
-                          <Input
-                            type="number"
-                            step="0.01"
-                            value={item.flatRate || '0'}
-                            onChange={(e) => handleLineItemUpdate(item, 'flatRate', e.target.value)}
                             className="w-full text-sm"
                             placeholder="0.00"
                           />
@@ -368,6 +383,14 @@ export default function MediaPlanBuilder({
                         {/* Actions */}
                         <TableCell>
                           <div className="flex space-x-1">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => setEditingLineItem(editingLineItem === item.id ? null : item.id)}
+                              className="text-blue-500 hover:text-blue-700 px-2"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
                             <Button
                               size="sm"
                               variant="ghost"
