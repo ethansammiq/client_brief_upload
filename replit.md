@@ -6,17 +6,17 @@ This is a full-stack TypeScript application for managing RFP (Request for Propos
 
 ## Recent Changes
 
-- **July 11, 2025**: Expanded Media Plan Chart Structure with Modal-Based Product Addition
+- **July 11, 2025**: Campaign Date Integration and Enhanced User Experience
+  - Added campaign start and end date fields to RFP response schema and create/edit forms
+  - Updated campaign header to display campaign duration prominently alongside client and due date information
+  - Enhanced add product modal to automatically populate campaign dates as default values for line items
+  - Streamlined campaign creation workflow with start/end dates displayed in three-column layout
+  - Updated sample data to include campaign dates for better demonstration
+  - Improved data flow between campaign creation and media plan building processes
+  - Maintained existing expanded media plan chart structure with all comprehensive fields
+  - Enhanced ProductLibrary component to pass campaign context to product addition modal
+  - Ensured consistent date formatting and display across all components
   - Fixed campaign creation and data flow issues - campaigns now properly display correct title, client name, and due date
-  - Expanded media plan chart to include comprehensive new fields: Site, Placement Name, Targeting Details, Ad Sizes, Start Date, End Date, Rate (Model), Rate ($), Units, and Cost ($)
-  - Updated database schema to support all new media plan line item fields including rateModel with proper defaults
-  - Enhanced MediaPlanBuilder component with expanded table structure accommodating all requested columns
-  - Implemented modal-based product addition workflow with comprehensive form including all campaign details
-  - Added Rate Model dropdown with CPM, dCPM, CPCV, and CPC options with automatic cost calculation
-  - Changed media plan table from live text boxes to display-only mode with edit button for controlled editing
-  - Added per-row edit functionality - click Edit button to make fields editable, Save to finish editing
-  - Updated ProductLibrary component to use modal workflow instead of direct click-to-add
-  - Maintained horizontal scrolling for the expanded table structure to ensure all fields are accessible
 
 - **July 10, 2025**: Complete Media Planner redesign with card-based layout
   - Redesigned entire Media Planner tab with modern card-based layout inspired by MiQ platform

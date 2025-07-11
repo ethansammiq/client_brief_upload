@@ -98,12 +98,14 @@ export default function Dashboard() {
                             <span className="text-sm font-medium">Due Date:</span>
                             <span className="ml-2 text-[#2b0030]">{currentRfp?.dueDate || "Not specified"}</span>
                           </div>
-                          {currentRfp?.budget && (
-                            <div className="flex items-center">
-                              <span className="text-sm font-medium">Budget:</span>
-                              <span className="ml-2 text-white">${currentRfp.budget.toLocaleString()}</span>
-                            </div>
-                          )}
+                          <div className="flex items-center text-[#2b0030]">
+                            <span className="text-sm font-medium">Campaign:</span>
+                            <span className="ml-2 text-[#2b0030]">
+                              {currentRfp?.campaignStartDate && currentRfp?.campaignEndDate 
+                                ? `${currentRfp.campaignStartDate} - ${currentRfp.campaignEndDate}`
+                                : "Not specified"}
+                            </span>
+                          </div>
                         </div>
                       </div>
                       <Button
@@ -129,6 +131,8 @@ export default function Dashboard() {
                       <div className="p-6">
                         <ProductLibrary 
                           selectedVersionId={selectedVersionId}
+                          campaignStartDate={currentRfp?.campaignStartDate}
+                          campaignEndDate={currentRfp?.campaignEndDate}
                         />
                       </div>
                     </div>

@@ -19,9 +19,11 @@ import type { Product, InsertMediaPlanLineItem } from "@shared/schema";
 
 interface ProductLibraryProps {
   selectedVersionId: number;
+  campaignStartDate?: string;
+  campaignEndDate?: string;
 }
 
-export default function ProductLibrary({ selectedVersionId }: ProductLibraryProps) {
+export default function ProductLibrary({ selectedVersionId, campaignStartDate, campaignEndDate }: ProductLibraryProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const { toast } = useToast();
@@ -127,6 +129,8 @@ export default function ProductLibrary({ selectedVersionId }: ProductLibraryProp
                   <AddProductModal 
                     product={product} 
                     selectedVersionId={selectedVersionId}
+                    campaignStartDate={campaignStartDate}
+                    campaignEndDate={campaignEndDate}
                   >
                     <Button 
                       size="sm" 

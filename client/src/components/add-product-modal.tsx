@@ -52,9 +52,11 @@ interface AddProductModalProps {
   product: Product;
   selectedVersionId: number;
   children: React.ReactNode;
+  campaignStartDate?: string;
+  campaignEndDate?: string;
 }
 
-export default function AddProductModal({ product, selectedVersionId, children }: AddProductModalProps) {
+export default function AddProductModal({ product, selectedVersionId, children, campaignStartDate, campaignEndDate }: AddProductModalProps) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -66,8 +68,8 @@ export default function AddProductModal({ product, selectedVersionId, children }
       placementName: product.placementName || "",
       targetingDetails: product.targetingDetails || "",
       adSizes: product.adSizes || "",
-      startDate: "",
-      endDate: "",
+      startDate: campaignStartDate || "",
+      endDate: campaignEndDate || "",
       rateModel: "CPM",
       rate: "25.00",
       units: "1000000",

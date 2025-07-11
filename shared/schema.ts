@@ -18,6 +18,8 @@ export const rfpResponses = pgTable("rfp_responses", {
   title: text("title").notNull(),
   clientName: text("client_name").notNull(),
   dueDate: text("due_date"),
+  campaignStartDate: text("campaign_start_date"),
+  campaignEndDate: text("campaign_end_date"),
   status: text("status").notNull().default("draft"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

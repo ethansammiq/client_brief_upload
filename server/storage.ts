@@ -184,6 +184,8 @@ export class MemStorage implements IStorage {
       title: "Q4 2024 Brand Campaign",
       clientName: "Global Tech Company",
       dueDate: "December 15, 2024",
+      campaignStartDate: "2024-10-01",
+      campaignEndDate: "2024-12-31",
       status: "draft",
       createdAt: new Date(),
       updatedAt: new Date()

@@ -31,11 +31,9 @@ export default function RfpForm({ rfpResponse, onSuccess, children }: RfpFormPro
       title: rfpResponse?.title || "",
       clientName: rfpResponse?.clientName || "",
       dueDate: rfpResponse?.dueDate || "",
-      description: rfpResponse?.description || "",
-      budget: rfpResponse?.budget || 0,
-      objectives: rfpResponse?.objectives || "",
-      targetAudience: rfpResponse?.targetAudience || "",
-      kpis: rfpResponse?.kpis || "",
+      campaignStartDate: rfpResponse?.campaignStartDate || "",
+      campaignEndDate: rfpResponse?.campaignEndDate || "",
+      status: rfpResponse?.status || "draft",
     },
   });
 
@@ -131,7 +129,7 @@ export default function RfpForm({ rfpResponse, onSuccess, children }: RfpFormPro
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
                 name="dueDate"
@@ -147,18 +145,25 @@ export default function RfpForm({ rfpResponse, onSuccess, children }: RfpFormPro
               />
               <FormField
                 control={form.control}
-                name="budget"
+                name="campaignStartDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Budget</FormLabel>
+                    <FormLabel>Campaign Start Date</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01" 
-                        placeholder="50000" 
-                        {...field} 
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                      />
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="campaignEndDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Campaign End Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
