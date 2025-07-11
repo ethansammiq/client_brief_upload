@@ -313,7 +313,7 @@ export default function MediaPlanBuilder({
                               placeholder="Targeting details"
                             />
                           ) : (
-                            <div className="max-w-[200px] h-20 overflow-y-auto text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2">
+                            <div className="max-w-[200px] text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2">
                               {item.targetingDetails || product?.targetingDetails || '-'}
                             </div>
                           )}
