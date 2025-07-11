@@ -31,6 +31,8 @@ export default function MediaPlanBuilder({
   onVersionChange,
 }: MediaPlanBuilderProps) {
   const [editingLineItem, setEditingLineItem] = useState<number | null>(null);
+  const [editingVersionName, setEditingVersionName] = useState<number | null>(null);
+  const [versionNameInput, setVersionNameInput] = useState<string>('');
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -153,6 +155,26 @@ export default function MediaPlanBuilder({
         title: "Version Deleted",
         description: "Media plan version has been deleted.",
       });
+    },
+  });
+
+  const updateVersionNameMutation = useMutation({
+    mutationFn: async ({ id, title }: { id: number; title: string }) => {
+      return apiRequest("PATCH", `/api/media-plan-versions/${id}`, { title });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ 
+        queryKey: [`/api/rfp-responses/${rfpResponse?.id}/media-plan-versions`] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/rfp-responses'] 
+      });
+      toast({
+        title: "Version Updated",
+        description: "Media plan version name has been updated.",
+      });
+      setEditingVersionName(null);
+      setVersionNameInput('');
     },
   });
 
@@ -399,21 +421,72 @@ export default function MediaPlanBuilder({
           <p className="text-sm text-gray-600">Manage different versions of your media plan</p>
         </div>
         <div className="flex items-center space-x-3">
-          <Select 
-            value={selectedVersionId.toString()} 
-            onValueChange={(value) => onVersionChange(parseInt(value))}
-          >
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Select version" />
-            </SelectTrigger>
-            <SelectContent>
-              {mediaPlanVersions.map((version) => (
-                <SelectItem key={version.id} value={version.id.toString()}>
-                  {version.title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {editingVersionName === selectedVersionId ? (
+            <div className="flex items-center space-x-2">
+              <Input
+                value={versionNameInput}
+                onChange={(e) => setVersionNameInput(e.target.value)}
+                className="w-48"
+                placeholder="Version name"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    updateVersionNameMutation.mutate({ id: selectedVersionId, title: versionNameInput });
+                  }
+                  if (e.key === 'Escape') {
+                    setEditingVersionName(null);
+                    setVersionNameInput('');
+                  }
+                }}
+              />
+              <Button
+                size="sm"
+                onClick={() => updateVersionNameMutation.mutate({ id: selectedVersionId, title: versionNameInput })}
+                disabled={updateVersionNameMutation.isPending || !versionNameInput.trim()}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                Save
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setEditingVersionName(null);
+                  setVersionNameInput('');
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Select 
+                value={selectedVersionId.toString()} 
+                onValueChange={(value) => onVersionChange(parseInt(value))}
+              >
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Select version" />
+                </SelectTrigger>
+                <SelectContent>
+                  {mediaPlanVersions.map((version) => (
+                    <SelectItem key={version.id} value={version.id.toString()}>
+                      {version.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setEditingVersionName(selectedVersionId);
+                  setVersionNameInput(currentVersion?.title || '');
+                }}
+                className="text-blue-600 hover:text-blue-700 border-blue-200 hover:border-blue-300"
+              >
+                <Edit className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
           <Button
             onClick={() => createVersionMutation.mutate()}
             disabled={createVersionMutation.isPending}
@@ -455,9 +528,25 @@ export default function MediaPlanBuilder({
       {/* Media Plan Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="p-4 border-b border-gray-200">
-          <h4 className="text-lg font-semibold text-gray-900">
-            {currentVersion?.title || "Media Plan"}
-          </h4>
+          <div className="flex items-center justify-between">
+            <h4 className="text-lg font-semibold text-gray-900">
+              {currentVersion?.title || "Media Plan"}
+            </h4>
+            {editingVersionName !== selectedVersionId && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  setEditingVersionName(selectedVersionId);
+                  setVersionNameInput(currentVersion?.title || '');
+                }}
+                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+              >
+                <Edit className="w-4 h-4 mr-1" />
+                Edit Name
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="overflow-x-auto">
