@@ -21,7 +21,7 @@ export default function SubNavigation({ activeTab, onTabChange }: SubNavigationP
                 key={tab.id}
                 variant="ghost"
                 onClick={() => onTabChange(tab.id)}
-                className={`text-sm transition-colors duration-200 ${
+                className={`text-sm transition-colors duration-200 rounded-none ${
                   activeTab === tab.id
                     ? "text-black border-b-2 border-yellow-500 bg-transparent hover:bg-transparent font-bold"
                     : "text-gray-500 hover:text-gray-500 hover:font-bold border-b-2 border-transparent font-medium bg-transparent hover:bg-transparent"
