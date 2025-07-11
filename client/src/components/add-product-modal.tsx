@@ -129,6 +129,9 @@ export default function AddProductModal({ product, selectedVersionId, children, 
       queryClient.invalidateQueries({ 
         queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`] 
       });
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/rfp-responses'] 
+      });
       toast({
         title: "Product Added",
         description: "Product has been added to your media plan.",

@@ -131,6 +131,9 @@ export default function MediaPlanBuilder({
       queryClient.invalidateQueries({ 
         queryKey: [`/api/rfp-responses/${rfpResponse?.id}/media-plan-versions`] 
       });
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/rfp-responses'] 
+      });
       if (newVersion) {
         onVersionChange(newVersion.id);
       }
@@ -148,6 +151,9 @@ export default function MediaPlanBuilder({
     onSuccess: () => {
       queryClient.invalidateQueries({ 
         queryKey: [`/api/rfp-responses/${rfpResponse?.id}/media-plan-versions`] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/rfp-responses'] 
       });
       
       // Switch to the first available version after deletion
@@ -171,6 +177,12 @@ export default function MediaPlanBuilder({
       queryClient.invalidateQueries({ 
         queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`] 
       });
+      queryClient.invalidateQueries({ 
+        queryKey: [`/api/rfp-responses/${rfpResponse?.id}/media-plan-versions`] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/rfp-responses'] 
+      });
       setEditingLineItem(null);
       toast({
         title: "Updated",
@@ -186,6 +198,12 @@ export default function MediaPlanBuilder({
     onSuccess: () => {
       queryClient.invalidateQueries({ 
         queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: [`/api/rfp-responses/${rfpResponse?.id}/media-plan-versions`] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/rfp-responses'] 
       });
       toast({
         title: "Deleted",
@@ -222,6 +240,9 @@ export default function MediaPlanBuilder({
       });
       queryClient.invalidateQueries({ 
         queryKey: [`/api/rfp-responses/${rfpResponse?.id}/media-plan-versions`] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/rfp-responses'] 
       });
       toast({
         title: "Duplicated",
