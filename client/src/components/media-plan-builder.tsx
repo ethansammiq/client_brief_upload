@@ -607,16 +607,28 @@ export default function MediaPlanBuilder({
                       </TableRow>,
                       // Package child rows
                       ...group.items.map((item) => (
-                        <TableRow key={item.id} className="hover:bg-gray-50 h-12 border-l-4 border-blue-200 bg-blue-50/30">
+                        <TableRow key={item.id} className="hover:bg-gray-50 h-20 border-l-4 border-blue-200 bg-blue-50/30">
                           {editingLineItem === null && (
                             <TableCell>
                               <span className="text-sm text-gray-500 ml-4">↳</span>
                             </TableCell>
                           )}
                           <TableCell>
-                            <span className="text-sm text-gray-700 ml-4">
-                              {item.placementName?.replace(/^MiQ_/, '') || item.lineItemName}
-                            </span>
+                            {editingLineItem === item.id ? (
+                              <Input
+                                value={item.placementName?.replace(/^MiQ_/, '') || item.lineItemName}
+                                onChange={(e) => {
+                                  const newName = e.target.value.startsWith('MiQ_') ? e.target.value : `MiQ_${e.target.value}`;
+                                  handleLineItemUpdate(item, 'placementName', newName);
+                                }}
+                                className="w-full text-sm h-12 ml-4"
+                                placeholder="Placement name"
+                              />
+                            ) : (
+                              <span className="text-sm text-gray-700 ml-4">
+                                {item.placementName?.replace(/^MiQ_/, '') || item.lineItemName}
+                              </span>
+                            )}
                           </TableCell>
                           {editingLineItem === null && (
                             <>
@@ -634,19 +646,129 @@ export default function MediaPlanBuilder({
                               </TableCell>
                             </>
                           )}
-                          <TableCell><span className="text-sm text-gray-500">-</span></TableCell>
-                          <TableCell><span className="text-sm text-gray-500">-</span></TableCell>
-                          <TableCell><span className="text-sm text-gray-500">-</span></TableCell>
-                          <TableCell><span className="text-sm text-gray-500">-</span></TableCell>
-                          <TableCell><span className="text-sm text-gray-500">-</span></TableCell>
-                          <TableCell><span className="text-sm text-gray-500">-</span></TableCell>
+                          {editingLineItem === item.id && (
+                            <>
+                              <TableCell>
+                                <Input
+                                  value={item.targetingDetails || ''}
+                                  onChange={(e) => handleLineItemUpdate(item, 'targetingDetails', e.target.value)}
+                                  className="w-full text-sm"
+                                  placeholder="Targeting details"
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <Input
+                                  value={item.adSizes || ''}
+                                  onChange={(e) => handleLineItemUpdate(item, 'adSizes', e.target.value)}
+                                  className="w-full text-sm"
+                                  placeholder="Ad sizes"
+                                />
+                              </TableCell>
+                            </>
+                          )}
+                          {/* Start Date */}
+                          <TableCell>
+                            {editingLineItem === item.id ? (
+                              <Input
+                                type="date"
+                                value={item.startDate || ''}
+                                onChange={(e) => handleLineItemUpdate(item, 'startDate', e.target.value)}
+                                className="w-full text-sm"
+                              />
+                            ) : (
+                              <span className="text-sm text-gray-500">-</span>
+                            )}
+                          </TableCell>
+                          {/* End Date */}
+                          <TableCell>
+                            {editingLineItem === item.id ? (
+                              <Input
+                                type="date"
+                                value={item.endDate || ''}
+                                onChange={(e) => handleLineItemUpdate(item, 'endDate', e.target.value)}
+                                className="w-full text-sm"
+                              />
+                            ) : (
+                              <span className="text-sm text-gray-500">-</span>
+                            )}
+                          </TableCell>
+                          {/* Rate Model */}
+                          <TableCell>
+                            {editingLineItem === item.id ? (
+                              <Select 
+                                value={item.rateModel || 'dCPM'} 
+                                onValueChange={(value) => handleLineItemUpdate(item, 'rateModel', value)}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="CPM">CPM</SelectItem>
+                                  <SelectItem value="dCPM">dCPM</SelectItem>
+                                  <SelectItem value="CPCV">CPCV</SelectItem>
+                                  <SelectItem value="CPC">CPC</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <span className="text-sm text-gray-500">-</span>
+                            )}
+                          </TableCell>
+                          {/* Rate ($) */}
+                          <TableCell>
+                            {editingLineItem === item.id ? (
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={item.cpmRate || ''}
+                                onChange={(e) => handleLineItemUpdate(item, 'cpmRate', e.target.value)}
+                                className="w-full text-sm"
+                                placeholder="0.00"
+                              />
+                            ) : (
+                              <span className="text-sm text-gray-500">-</span>
+                            )}
+                          </TableCell>
+                          {/* Units */}
+                          <TableCell>
+                            {editingLineItem === item.id ? (
+                              <Input
+                                type="number"
+                                value={item.impressions || ''}
+                                onChange={(e) => handleLineItemUpdate(item, 'impressions', parseInt(e.target.value) || 0)}
+                                className="w-full text-sm"
+                                placeholder="0"
+                              />
+                            ) : (
+                              <span className="text-sm text-gray-500">-</span>
+                            )}
+                          </TableCell>
+                          {/* Cost ($) */}
+                          <TableCell>
+                            <span className="text-sm text-gray-500">-</span>
+                          </TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-1">
                               <Button
                                 size="sm"
                                 variant="ghost"
+                                onClick={() => setEditingLineItem(editingLineItem === item.id ? null : item.id)}
+                                className="text-blue-500 hover:text-blue-700 px-2"
+                              >
+                                {editingLineItem === item.id ? (
+                                  <>
+                                    <span className="text-xs mr-1">Save</span>
+                                  </>
+                                ) : (
+                                  <Edit className="w-3 h-3" />
+                                )}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
                                 onClick={() => duplicateLineItemMutation.mutate(item)}
-                                className="text-green-600 hover:text-green-700 hover:bg-green-50 p-1"
+                                disabled={duplicateLineItemMutation.isPending}
+                                className="text-green-500 hover:text-green-700 px-2"
+                                title="Duplicate line item"
                               >
                                 <Copy className="w-3 h-3" />
                               </Button>
@@ -654,7 +776,8 @@ export default function MediaPlanBuilder({
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => deleteLineItemMutation.mutate(item.id)}
-                                className="text-red-600 hover:text-red-700 hover:bg-red-50 p-1"
+                                disabled={deleteLineItemMutation.isPending}
+                                className="text-red-500 hover:text-red-700 px-2"
                               >
                                 <Trash2 className="w-3 h-3" />
                               </Button>
