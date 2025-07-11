@@ -158,7 +158,6 @@ export default function ProductLibrary({ selectedVersionId, campaignStartDate, c
                   <Badge variant="outline" className="text-xs font-medium text-gray-600">
                     {product.pricingModel}
                   </Badge>
-                  <span className="text-xs text-blue-600 font-medium">Click to add</span>
                 </div>
               </div>
             ))}
