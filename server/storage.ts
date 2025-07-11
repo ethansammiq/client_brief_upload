@@ -9,6 +9,9 @@ import {
   InsertMediaPlanLineItem,
   UpdateMediaPlanLineItem 
 } from "@shared/schema";
+import { db } from "./db";
+import { products, rfpResponses, mediaPlanVersions, mediaPlanLineItems } from "@shared/schema";
+import { eq, ilike, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Products
@@ -381,4 +384,162 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  // Products
+  async getProducts(): Promise<Product[]> {
+    return await db.select().from(products);
+  }
+
+  async getProduct(id: number): Promise<Product | undefined> {
+    const [product] = await db.select().from(products).where(eq(products.id, id));
+    return product || undefined;
+  }
+
+  async createProduct(product: InsertProduct): Promise<Product> {
+    const [newProduct] = await db
+      .insert(products)
+      .values(product)
+      .returning();
+    return newProduct;
+  }
+
+  async updateProduct(id: number, product: Partial<InsertProduct>): Promise<Product> {
+    const [updatedProduct] = await db
+      .update(products)
+      .set(product)
+      .where(eq(products.id, id))
+      .returning();
+    if (!updatedProduct) {
+      throw new Error(`Product with id ${id} not found`);
+    }
+    return updatedProduct;
+  }
+
+  async deleteProduct(id: number): Promise<void> {
+    await db.delete(products).where(eq(products.id, id));
+  }
+
+  async searchProducts(query: string): Promise<Product[]> {
+    return await db
+      .select()
+      .from(products)
+      .where(ilike(products.name, `%${query}%`));
+  }
+
+  async getProductsByCategory(category: string): Promise<Product[]> {
+    return await db
+      .select()
+      .from(products)
+      .where(eq(products.category, category));
+  }
+
+  // RFP Responses
+  async getRfpResponses(): Promise<RfpResponse[]> {
+    return await db.select().from(rfpResponses);
+  }
+
+  async getRfpResponse(id: number): Promise<RfpResponse | undefined> {
+    const [rfpResponse] = await db.select().from(rfpResponses).where(eq(rfpResponses.id, id));
+    return rfpResponse || undefined;
+  }
+
+  async createRfpResponse(rfpResponse: InsertRfpResponse): Promise<RfpResponse> {
+    const [newRfpResponse] = await db
+      .insert(rfpResponses)
+      .values(rfpResponse)
+      .returning();
+    return newRfpResponse;
+  }
+
+  async updateRfpResponse(id: number, rfpResponse: Partial<InsertRfpResponse>): Promise<RfpResponse> {
+    const [updatedRfpResponse] = await db
+      .update(rfpResponses)
+      .set(rfpResponse)
+      .where(eq(rfpResponses.id, id))
+      .returning();
+    if (!updatedRfpResponse) {
+      throw new Error(`RFP Response with id ${id} not found`);
+    }
+    return updatedRfpResponse;
+  }
+
+  async deleteRfpResponse(id: number): Promise<void> {
+    await db.delete(rfpResponses).where(eq(rfpResponses.id, id));
+  }
+
+  // Media Plan Versions
+  async getMediaPlanVersions(rfpResponseId: number): Promise<MediaPlanVersion[]> {
+    return await db
+      .select()
+      .from(mediaPlanVersions)
+      .where(eq(mediaPlanVersions.rfpResponseId, rfpResponseId));
+  }
+
+  async getMediaPlanVersion(id: number): Promise<MediaPlanVersion | undefined> {
+    const [version] = await db.select().from(mediaPlanVersions).where(eq(mediaPlanVersions.id, id));
+    return version || undefined;
+  }
+
+  async createMediaPlanVersion(mediaPlanVersion: InsertMediaPlanVersion): Promise<MediaPlanVersion> {
+    const [newVersion] = await db
+      .insert(mediaPlanVersions)
+      .values(mediaPlanVersion)
+      .returning();
+    return newVersion;
+  }
+
+  async updateMediaPlanVersion(id: number, mediaPlanVersion: Partial<InsertMediaPlanVersion>): Promise<MediaPlanVersion> {
+    const [updatedVersion] = await db
+      .update(mediaPlanVersions)
+      .set(mediaPlanVersion)
+      .where(eq(mediaPlanVersions.id, id))
+      .returning();
+    if (!updatedVersion) {
+      throw new Error(`Media Plan Version with id ${id} not found`);
+    }
+    return updatedVersion;
+  }
+
+  async deleteMediaPlanVersion(id: number): Promise<void> {
+    await db.delete(mediaPlanVersions).where(eq(mediaPlanVersions.id, id));
+  }
+
+  // Media Plan Line Items
+  async getMediaPlanLineItems(mediaPlanVersionId: number): Promise<MediaPlanLineItem[]> {
+    return await db
+      .select()
+      .from(mediaPlanLineItems)
+      .where(eq(mediaPlanLineItems.mediaPlanVersionId, mediaPlanVersionId));
+  }
+
+  async getMediaPlanLineItem(id: number): Promise<MediaPlanLineItem | undefined> {
+    const [lineItem] = await db.select().from(mediaPlanLineItems).where(eq(mediaPlanLineItems.id, id));
+    return lineItem || undefined;
+  }
+
+  async createMediaPlanLineItem(lineItem: InsertMediaPlanLineItem): Promise<MediaPlanLineItem> {
+    const [newLineItem] = await db
+      .insert(mediaPlanLineItems)
+      .values(lineItem)
+      .returning();
+    return newLineItem;
+  }
+
+  async updateMediaPlanLineItem(id: number, lineItem: UpdateMediaPlanLineItem): Promise<MediaPlanLineItem> {
+    const [updatedLineItem] = await db
+      .update(mediaPlanLineItems)
+      .set(lineItem)
+      .where(eq(mediaPlanLineItems.id, id))
+      .returning();
+    if (!updatedLineItem) {
+      throw new Error(`Media Plan Line Item with id ${id} not found`);
+    }
+    return updatedLineItem;
+  }
+
+  async deleteMediaPlanLineItem(id: number): Promise<void> {
+    await db.delete(mediaPlanLineItems).where(eq(mediaPlanLineItems.id, id));
+  }
+}
+
+export const storage = new DatabaseStorage();
