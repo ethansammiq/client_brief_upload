@@ -47,9 +47,6 @@ export default function MediaPlanBuilder({
     queryKey: ['/api/products'],
   });
 
-  // Debug logging
-  console.log('Line items:', lineItems);
-
   const createVersionMutation = useMutation({
     mutationFn: async () => {
       const versionCount = mediaPlanVersions.length;
@@ -280,14 +277,20 @@ export default function MediaPlanBuilder({
     lineItems.forEach(item => {
       // Check if it's a YouTube package item by looking at the line item name pattern
       if (item.lineItemName.includes('YouTube') && item.lineItemName.includes(' - ')) {
-        // Extract package name from line item name (e.g., "YouTube - Relevance Package")
-        const packageMatch = item.lineItemName.match(/^(.*?)\s-\s/);
-        const packageName = packageMatch ? packageMatch[1] : 'YouTube Package';
-        
-        if (!youtubePackages.has(packageName)) {
-          youtubePackages.set(packageName, []);
+        // Extract package name from line item name (e.g., "YouTube - Reach Package")
+        const packageMatch = item.lineItemName.match(/^YouTube - (.+?) - /);
+        if (packageMatch) {
+          const packageType = packageMatch[1]; // e.g., "Reach Package"
+          const packageName = `MiQ_YouTube_${packageType.replace(' ', '_')}`;
+          
+          if (!youtubePackages.has(packageName)) {
+            youtubePackages.set(packageName, []);
+          }
+          youtubePackages.get(packageName)!.push(item);
+        } else {
+          // Fallback for other patterns
+          individualItems.push(item);
         }
-        youtubePackages.get(packageName)!.push(item);
       } else {
         individualItems.push(item);
       }
@@ -328,9 +331,6 @@ export default function MediaPlanBuilder({
 
     return grouped;
   };
-
-  // Debug logging after function definition
-  console.log('Grouped result:', groupLineItems());
 
   const calculateTotals = () => {
     const totalBudget = lineItems.reduce((sum, item) => sum + parseFloat(item.totalCost), 0);
