@@ -105,11 +105,18 @@ export default function Dashboard() {
       // Create worksheet for each version
       for (const version of mediaPlanVersions) {
         try {
+          console.log(`Fetching line items for version ${version.id}`);
           const lineItemsResponse = await fetch(`/api/media-plan-versions/${version.id}/line-items`);
+          console.log(`Response status: ${lineItemsResponse.status}`);
+          
           if (!lineItemsResponse.ok) {
-            throw new Error(`Failed to fetch line items for version ${version.id}`);
+            const errorText = await lineItemsResponse.text();
+            console.error(`API Error for version ${version.id}:`, errorText);
+            throw new Error(`Failed to fetch line items for version ${version.id}: ${lineItemsResponse.status} ${errorText}`);
           }
+          
           const lineItems: MediaPlanLineItem[] = await lineItemsResponse.json();
+          console.log(`Fetched ${lineItems.length} line items for version ${version.id}`);
 
           // Create headers
           const headers = [
@@ -168,8 +175,9 @@ export default function Dashboard() {
           XLSX.utils.book_append_sheet(workbook, ws, sheetName);
         } catch (fetchError) {
           console.error(`Error fetching line items for version ${version.id}:`, fetchError);
+          console.error('Full error object:', JSON.stringify(fetchError, null, 2));
           // Create empty worksheet for this version
-          const emptyWs = XLSX.utils.aoa_to_sheet([['No data available for this version']]);
+          const emptyWs = XLSX.utils.aoa_to_sheet([['No data available for this version - Error: ' + (fetchError?.message || 'Unknown error')]]);
           XLSX.utils.book_append_sheet(workbook, emptyWs, version.name.substring(0, 31));
         }
       }
@@ -188,9 +196,13 @@ export default function Dashboard() {
 
     } catch (error) {
       console.error('Export error:', error);
+      console.error('Full export error object:', JSON.stringify(error, null, 2));
+      console.error('Error message:', error?.message);
+      console.error('Error stack:', error?.stack);
+      
       toast({
         title: "Export Failed",
-        description: "An error occurred while exporting the media plan.",
+        description: `An error occurred while exporting the media plan: ${error?.message || 'Unknown error'}`,
         variant: "destructive",
       });
     }
