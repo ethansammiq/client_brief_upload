@@ -296,7 +296,7 @@ export default function MediaPlanBuilder({
                             <Input
                               value={item.placementName || item.lineItemName}
                               onChange={(e) => handleLineItemUpdate(item, 'placementName', e.target.value)}
-                              className="w-full text-sm"
+                              className="w-full text-sm h-12"
                               placeholder="Placement name"
                             />
                           ) : (
@@ -306,10 +306,10 @@ export default function MediaPlanBuilder({
                         {/* Targeting Details */}
                         <TableCell>
                           {editingLineItem === item.id ? (
-                            <Input
+                            <textarea
                               value={item.targetingDetails || product?.targetingDetails || ''}
                               onChange={(e) => handleLineItemUpdate(item, 'targetingDetails', e.target.value)}
-                              className="w-full text-sm"
+                              className="w-full text-sm h-20 p-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Targeting details"
                             />
                           ) : (
