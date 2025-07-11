@@ -532,7 +532,7 @@ export default function MediaPlanBuilder({
                         <TableCell>
                           <span className="text-sm font-semibold text-gray-900">{group.packageName}</span>
                         </TableCell>
-                        {editingLineItem === null && (
+                        {editingLineItem !== `package-${group.packageName}` && (
                           <>
                             <TableCell>
                               <div className="max-w-[200px] max-h-[80px] text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2 overflow-y-auto table-cell-scroll">
@@ -553,35 +553,123 @@ export default function MediaPlanBuilder({
                             </TableCell>
                           </>
                         )}
+                        {editingLineItem === `package-${group.packageName}` && (
+                          <>
+                            <TableCell>
+                              <Input
+                                value={group.sharedData?.targetingDetails || ''}
+                                onChange={(e) => {
+                                  // Update targeting for all items in package
+                                  group.items.forEach(item => {
+                                    handleLineItemUpdate(item, 'targetingDetails', e.target.value);
+                                  });
+                                }}
+                                className="w-full text-sm"
+                                placeholder="Package targeting details"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="text-xs bg-orange-50 text-orange-600 border-orange-200">
+                                Package
+                              </Badge>
+                            </TableCell>
+                          </>
+                        )}
                         <TableCell>
-                          <span className="text-sm text-gray-900">
-                            {group.sharedData?.startDate 
-                              ? new Date(group.sharedData.startDate).toLocaleDateString('en-US', { 
-                                  month: '2-digit', 
-                                  day: '2-digit', 
-                                  year: '2-digit' 
-                                }).replace(/\//g, '-')
-                              : '-'}
-                          </span>
+                          {editingLineItem === `package-${group.packageName}` ? (
+                            <Input
+                              type="date"
+                              value={group.sharedData?.startDate || ''}
+                              onChange={(e) => {
+                                // Update start date for all items in package
+                                group.items.forEach(item => {
+                                  handleLineItemUpdate(item, 'startDate', e.target.value);
+                                });
+                              }}
+                              className="w-full text-sm"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-900">
+                              {group.sharedData?.startDate 
+                                ? new Date(group.sharedData.startDate).toLocaleDateString('en-US', { 
+                                    month: '2-digit', 
+                                    day: '2-digit', 
+                                    year: '2-digit' 
+                                  }).replace(/\//g, '-')
+                                : '-'}
+                            </span>
+                          )}
                         </TableCell>
                         <TableCell>
-                          <span className="text-sm text-gray-900">
-                            {group.sharedData?.endDate 
-                              ? new Date(group.sharedData.endDate).toLocaleDateString('en-US', { 
-                                  month: '2-digit', 
-                                  day: '2-digit', 
-                                  year: '2-digit' 
-                                }).replace(/\//g, '-')
-                              : '-'}
-                          </span>
+                          {editingLineItem === `package-${group.packageName}` ? (
+                            <Input
+                              type="date"
+                              value={group.sharedData?.endDate || ''}
+                              onChange={(e) => {
+                                // Update end date for all items in package
+                                group.items.forEach(item => {
+                                  handleLineItemUpdate(item, 'endDate', e.target.value);
+                                });
+                              }}
+                              className="w-full text-sm"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-900">
+                              {group.sharedData?.endDate 
+                                ? new Date(group.sharedData.endDate).toLocaleDateString('en-US', { 
+                                    month: '2-digit', 
+                                    day: '2-digit', 
+                                    year: '2-digit' 
+                                  }).replace(/\//g, '-')
+                                : '-'}
+                            </span>
+                          )}
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline" className="text-xs">
-                            {group.sharedData?.rateModel || 'dCPM'}
-                          </Badge>
+                          {editingLineItem === `package-${group.packageName}` ? (
+                            <Select 
+                              value={group.sharedData?.rateModel || 'dCPM'} 
+                              onValueChange={(value) => {
+                                // Update rate model for all items in package
+                                group.items.forEach(item => {
+                                  handleLineItemUpdate(item, 'rateModel', value);
+                                });
+                              }}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="CPM">CPM</SelectItem>
+                                <SelectItem value="dCPM">dCPM</SelectItem>
+                                <SelectItem value="CPCV">CPCV</SelectItem>
+                                <SelectItem value="CPC">CPC</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <Badge variant="outline" className="text-xs">
+                              {group.sharedData?.rateModel || 'dCPM'}
+                            </Badge>
+                          )}
                         </TableCell>
                         <TableCell>
-                          <span className="text-sm text-gray-900">${group.sharedData?.cpmRate || '0'}</span>
+                          {editingLineItem === `package-${group.packageName}` ? (
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={group.sharedData?.cpmRate || ''}
+                              onChange={(e) => {
+                                // Update CPM rate for all items in package
+                                group.items.forEach(item => {
+                                  handleLineItemUpdate(item, 'cpmRate', e.target.value);
+                                });
+                              }}
+                              className="w-full text-sm"
+                              placeholder="0.00"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-900">${group.sharedData?.cpmRate || '0'}</span>
+                          )}
                         </TableCell>
                         <TableCell>
                           <span className="text-sm text-gray-900">{group.sharedData?.totalUnits.toLocaleString() || '0'}</span>
@@ -595,15 +683,17 @@ export default function MediaPlanBuilder({
                               size="sm"
                               variant="ghost"
                               onClick={() => {
-                                // Toggle editing for the first item in package (this will enable editing for the whole package)
-                                const firstItem = group.items[0];
-                                if (firstItem) {
-                                  setEditingLineItem(editingLineItem === firstItem.id ? null : firstItem.id);
-                                }
+                                // Toggle editing for the package itself
+                                const packageId = `package-${group.packageName}`;
+                                setEditingLineItem(editingLineItem === packageId ? null : packageId);
                               }}
                               className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 p-1"
                             >
-                              <Edit className="w-3 h-3" />
+                              {editingLineItem === `package-${group.packageName}` ? (
+                                <span className="text-xs">Save</span>
+                              ) : (
+                                <Edit className="w-3 h-3" />
+                              )}
                             </Button>
                             <Button
                               size="sm"
