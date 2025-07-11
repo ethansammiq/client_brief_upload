@@ -138,13 +138,13 @@ export default function Dashboard() {
           // Add line items (simplified without grouping for now)
           lineItems.forEach(item => {
             const row = [
-              item.name || '',
+              item.lineItemName || '',
               item.productName || '',
               item.placementName || '',
               item.adSizes || '',
-              item.budget || '',
+              item.totalCost || '',
               item.impressions || '',
-              item.cpm || '',
+              item.cpmRate || '',
               item.startDate || '',
               item.endDate || '',
               item.targetingDetails || ''
@@ -171,14 +171,14 @@ export default function Dashboard() {
           ws['!cols'] = columnWidths;
 
           // Add worksheet to workbook
-          const sheetName = version.name.substring(0, 31); // Excel sheet name limit
+          const sheetName = (version.title || `Version ${version.id}`).substring(0, 31); // Excel sheet name limit
           XLSX.utils.book_append_sheet(workbook, ws, sheetName);
         } catch (fetchError) {
           console.error(`Error fetching line items for version ${version.id}:`, fetchError);
           console.error('Full error object:', JSON.stringify(fetchError, null, 2));
           // Create empty worksheet for this version
           const emptyWs = XLSX.utils.aoa_to_sheet([['No data available for this version - Error: ' + (fetchError?.message || 'Unknown error')]]);
-          XLSX.utils.book_append_sheet(workbook, emptyWs, version.name.substring(0, 31));
+          XLSX.utils.book_append_sheet(workbook, emptyWs, (version.title || `Version ${version.id}`).substring(0, 31));
         }
       }
 
