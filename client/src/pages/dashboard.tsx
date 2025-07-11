@@ -82,21 +82,21 @@ export default function Dashboard() {
               month: '2-digit', 
               day: '2-digit', 
               year: '2-digit' 
-            })
+            }).replace(/\//g, '-')
           : 'Not specified'],
         ['Campaign Start Date', currentRfp.campaignStartDate 
           ? new Date(currentRfp.campaignStartDate).toLocaleDateString('en-US', { 
               month: '2-digit', 
               day: '2-digit', 
               year: '2-digit' 
-            })
+            }).replace(/\//g, '-')
           : 'Not specified'],
         ['Campaign End Date', currentRfp.campaignEndDate 
           ? new Date(currentRfp.campaignEndDate).toLocaleDateString('en-US', { 
               month: '2-digit', 
               day: '2-digit', 
               year: '2-digit' 
-            })
+            }).replace(/\//g, '-')
           : 'Not specified'],
         ['Total Budget', currentRfp.totalBudget || 'Not specified'],
         ['Target Audience', currentRfp.targetAudience || 'Not specified'],
@@ -165,14 +165,14 @@ export default function Dashboard() {
                     month: '2-digit', 
                     day: '2-digit', 
                     year: '2-digit' 
-                  })
+                  }).replace(/\//g, '-')
                 : '',
               item.endDate 
                 ? new Date(item.endDate).toLocaleDateString('en-US', { 
                     month: '2-digit', 
                     day: '2-digit', 
                     year: '2-digit' 
-                  })
+                  }).replace(/\//g, '-')
                 : '',
               item.targetingDetails || ''
             ];
@@ -282,7 +282,7 @@ export default function Dashboard() {
                                     month: '2-digit', 
                                     day: '2-digit', 
                                     year: '2-digit' 
-                                  })
+                                  }).replace(/\//g, '-')
                                 : "Not specified"}
                             </span>
                           </div>
@@ -294,11 +294,11 @@ export default function Dashboard() {
                                     month: '2-digit', 
                                     day: '2-digit', 
                                     year: '2-digit' 
-                                  })} - ${new Date(currentRfp.campaignEndDate).toLocaleDateString('en-US', { 
+                                  }).replace(/\//g, '-')} - ${new Date(currentRfp.campaignEndDate).toLocaleDateString('en-US', { 
                                     month: '2-digit', 
                                     day: '2-digit', 
                                     year: '2-digit' 
-                                  })}`
+                                  }).replace(/\//g, '-')}`
                                 : "Not specified"}
                             </span>
                           </div>

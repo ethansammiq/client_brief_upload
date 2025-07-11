@@ -554,10 +554,26 @@ export default function MediaPlanBuilder({
                           </>
                         )}
                         <TableCell>
-                          <span className="text-sm text-gray-900">{group.sharedData?.startDate || '-'}</span>
+                          <span className="text-sm text-gray-900">
+                            {group.sharedData?.startDate 
+                              ? new Date(group.sharedData.startDate).toLocaleDateString('en-US', { 
+                                  month: '2-digit', 
+                                  day: '2-digit', 
+                                  year: '2-digit' 
+                                }).replace(/\//g, '-')
+                              : '-'}
+                          </span>
                         </TableCell>
                         <TableCell>
-                          <span className="text-sm text-gray-900">{group.sharedData?.endDate || '-'}</span>
+                          <span className="text-sm text-gray-900">
+                            {group.sharedData?.endDate 
+                              ? new Date(group.sharedData.endDate).toLocaleDateString('en-US', { 
+                                  month: '2-digit', 
+                                  day: '2-digit', 
+                                  year: '2-digit' 
+                                }).replace(/\//g, '-')
+                              : '-'}
+                          </span>
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className="text-xs">
@@ -760,7 +776,7 @@ export default function MediaPlanBuilder({
                                     month: '2-digit', 
                                     day: '2-digit', 
                                     year: '2-digit' 
-                                  })
+                                  }).replace(/\//g, '-')
                                 : '-'}
                             </span>
                           )}
@@ -781,7 +797,7 @@ export default function MediaPlanBuilder({
                                     month: '2-digit', 
                                     day: '2-digit', 
                                     year: '2-digit' 
-                                  })
+                                  }).replace(/\//g, '-')
                                 : '-'}
                             </span>
                           )}
