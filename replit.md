@@ -40,6 +40,10 @@ This is a full-stack TypeScript application for managing RFP (Request for Propos
   - Fixed media products page scrolling issue with proper overflow handling
   - Added delete version functionality with proper validation and automatic version switching
   - Delete button only appears when multiple versions exist to prevent deletion of last version
+  - Added duplicate/copy button for individual line items in media plan table
+  - Implemented line item duplication with automatic "(Copy)" suffix for names and placements
+  - Green copy icon button positioned between edit and delete buttons in actions column
+  - Automatic totals recalculation when line items are duplicated maintains data integrity
 
 - **July 10, 2025**: Complete Media Planner redesign with card-based layout
   - Redesigned entire Media Planner tab with modern card-based layout inspired by MiQ platform
