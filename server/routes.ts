@@ -194,6 +194,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.patch("/api/media-plan-versions/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const versionData = insertMediaPlanVersionSchema.partial().parse(req.body);
+      const version = await storage.updateMediaPlanVersion(id, versionData);
+      res.json(version);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid media plan version data" });
+    }
+  });
+
   app.delete("/api/media-plan-versions/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
