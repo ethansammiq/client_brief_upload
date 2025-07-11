@@ -329,20 +329,43 @@ export default function MediaPlanBuilder({
                             />
                           ) : (
                             <div className="text-sm space-y-1.5 min-w-[150px]">
-                              {(item.adSizes || product?.adSizes || '-').split(/(?=Desktop:|Tablet:|Mobile:)/g).filter(Boolean).map((platformGroup, index) => {
-                                const trimmed = platformGroup.trim();
-                                const colonIndex = trimmed.indexOf(':');
-                                if (colonIndex === -1) return null;
+                              {(() => {
+                                const adSizesText = item.adSizes || product?.adSizes || '-';
                                 
-                                const platform = trimmed.substring(0, colonIndex);
-                                const sizesText = trimmed.substring(colonIndex + 1).trim();
-                                const sizes = sizesText.split(',').map(s => s.trim()).filter(Boolean);
-                                
-                                return (
-                                  <div key={index} className="space-y-1">
-                                    <div className="font-semibold text-gray-900 text-xs">
-                                      {platform}:
-                                    </div>
+                                // Check if it contains platform-specific formatting (Desktop:, Tablet:, Mobile:)
+                                if (adSizesText.includes('Desktop:') || adSizesText.includes('Tablet:') || adSizesText.includes('Mobile:')) {
+                                  // Handle platform-specific ad sizes
+                                  return adSizesText.split(/(?=Desktop:|Tablet:|Mobile:)/g).filter(Boolean).map((platformGroup, index) => {
+                                    const trimmed = platformGroup.trim();
+                                    const colonIndex = trimmed.indexOf(':');
+                                    if (colonIndex === -1) return null;
+                                    
+                                    const platform = trimmed.substring(0, colonIndex);
+                                    const sizesText = trimmed.substring(colonIndex + 1).trim();
+                                    const sizes = sizesText.split(',').map(s => s.trim()).filter(Boolean);
+                                    
+                                    return (
+                                      <div key={index} className="space-y-1">
+                                        <div className="font-semibold text-gray-900 text-xs">
+                                          {platform}:
+                                        </div>
+                                        <div className="flex flex-wrap gap-1">
+                                          {sizes.map((size, sizeIndex) => (
+                                            <span 
+                                              key={sizeIndex}
+                                              className="inline-block px-1.5 py-0.5 bg-gray-100 text-gray-700 text-xs rounded border"
+                                            >
+                                              {size}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    );
+                                  });
+                                } else {
+                                  // Handle non-platform-specific ad sizes (like audio/video durations)
+                                  const sizes = adSizesText.split(',').map(s => s.trim()).filter(Boolean);
+                                  return (
                                     <div className="flex flex-wrap gap-1">
                                       {sizes.map((size, sizeIndex) => (
                                         <span 
@@ -353,9 +376,9 @@ export default function MediaPlanBuilder({
                                         </span>
                                       ))}
                                     </div>
-                                  </div>
-                                );
-                              })}
+                                  );
+                                }
+                              })()}
                             </div>
                           )}
                         </TableCell>
