@@ -302,13 +302,10 @@ export default function YouTubePackageModal({
                             }}
                           />
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-2">
+                            <div className="flex items-center gap-2">
                               <h4 className="font-medium">{placement.name}</h4>
                               <Badge variant="secondary">{placement.adSizes}</Badge>
                             </div>
-                            <p className="text-sm text-muted-foreground">
-                              {placement.targeting}
-                            </p>
                           </div>
                         </div>
                       ))}
