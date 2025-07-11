@@ -375,6 +375,21 @@ export default function MediaPlanBuilder({
     updateLineItemMutation.mutate({ id: lineItem.id, data: updatedItem });
   };
 
+  // Format targeting details to separate notice from content
+  const formatTargetingDetails = (targetingDetails: string | null) => {
+    if (!targetingDetails) return { notice: '', content: '' };
+    
+    // Look for text between ** and **
+    const noticeMatch = targetingDetails.match(/\*\*(.*?)\*\*/);
+    if (noticeMatch) {
+      const notice = noticeMatch[1];
+      const content = targetingDetails.replace(/\*\*.*?\*\*\s*/, '').trim();
+      return { notice, content };
+    }
+    
+    return { notice: '', content: targetingDetails };
+  };
+
   return (
     <div className="w-full">
       {/* Version Controls */}
@@ -521,7 +536,21 @@ export default function MediaPlanBuilder({
                           <>
                             <TableCell>
                               <div className="max-w-[200px] text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2">
-                                {group.sharedData?.targetingDetails || '-'}
+                                {(() => {
+                                  const formatted = formatTargetingDetails(group.sharedData?.targetingDetails);
+                                  return (
+                                    <div>
+                                      {formatted.notice && (
+                                        <div className="text-xs font-semibold text-blue-800 bg-blue-50 p-1 rounded mb-2 border border-blue-200">
+                                          {formatted.notice}
+                                        </div>
+                                      )}
+                                      <div className="text-xs text-gray-700">
+                                        {formatted.content || '-'}
+                                      </div>
+                                    </div>
+                                  );
+                                })()}
                               </div>
                             </TableCell>
                             <TableCell>
@@ -654,7 +683,21 @@ export default function MediaPlanBuilder({
                         {editingLineItem === null && (
                           <TableCell>
                             <div className="max-w-[200px] text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2">
-                              {item.targetingDetails || product?.targetingDetails || '-'}
+                              {(() => {
+                                const formatted = formatTargetingDetails(item.targetingDetails || product?.targetingDetails);
+                                return (
+                                  <div>
+                                    {formatted.notice && (
+                                      <div className="text-xs font-semibold text-blue-800 bg-blue-50 p-1 rounded mb-2 border border-blue-200">
+                                        {formatted.notice}
+                                      </div>
+                                    )}
+                                    <div className="text-xs text-gray-700">
+                                      {formatted.content || '-'}
+                                    </div>
+                                  </div>
+                                );
+                              })()}
                             </div>
                           </TableCell>
                         )}
