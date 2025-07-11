@@ -137,7 +137,7 @@ export default function YouTubePackageModal({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/rfp-responses'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/media-plan-versions', selectedVersionId, 'line-items'] });
+      queryClient.invalidateQueries({ queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`] });
       toast({
         title: "Success",
         description: `Added ${form.getValues("selectedPlacements").length} YouTube placements to media plan`,
