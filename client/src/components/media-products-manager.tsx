@@ -106,6 +106,7 @@ export default function MediaProductsManager() {
       'Video': 'bg-purple-100 text-purple-800',
       'Audio': 'bg-yellow-100 text-yellow-800',
       'Social': 'bg-pink-100 text-pink-800',
+      'YouTube': 'bg-red-100 text-red-800',
     };
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
@@ -252,6 +253,7 @@ export default function MediaProductsManager() {
                 <SelectItem value="Video">Video</SelectItem>
                 <SelectItem value="Audio">Audio</SelectItem>
                 <SelectItem value="Social">Social</SelectItem>
+                <SelectItem value="YouTube">YouTube</SelectItem>
               </SelectContent>
             </Select>
           </div>
