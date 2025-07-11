@@ -335,7 +335,7 @@ export default function MediaPlanBuilder({
           <Button
             onClick={() => createVersionMutation.mutate()}
             disabled={createVersionMutation.isPending}
-            className="bg-green-600 hover:bg-green-700"
+            className="hover:bg-green-700 bg-[#7c33b6]"
           >
             <Plus className="w-4 h-4 mr-2" />
             New Version
