@@ -6,6 +6,7 @@ import { z } from "zod";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -143,23 +144,23 @@ export default function AddProductModal({ product, selectedVersionId, children }
         {children}
       </DialogTrigger>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="space-y-3 pb-4">
+        <DialogHeader className="space-y-4 pb-6">
           <DialogTitle className="text-2xl font-bold text-gray-900">
             Add {product.name} to Media Plan
           </DialogTitle>
-          <p className="text-sm text-gray-600">
+          <DialogDescription className="text-sm text-gray-600">
             Configure the campaign details for this product placement
-          </p>
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             {/* Basic Information */}
-            <div className="bg-gray-50 p-4 rounded-lg space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Basic Information</h3>
-              <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 p-6 rounded-lg space-y-5">
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Basic Information</h3>
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <FormLabel className="text-sm font-medium text-gray-700">Site</FormLabel>
-                  <div className="mt-1 p-3 bg-white border border-gray-200 rounded-md text-sm text-gray-900 font-medium">
+                  <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">Site</FormLabel>
+                  <div className="mt-2 p-3 bg-white border border-gray-200 rounded-md text-sm text-gray-900 font-medium">
                     MiQ
                   </div>
                 </div>
@@ -168,11 +169,11 @@ export default function AddProductModal({ product, selectedVersionId, children }
                   name="placementName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">Placement Name</FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">Placement Name</FormLabel>
                       <FormControl>
                         <Input 
                           placeholder="Enter placement name" 
-                          className="mt-1 h-11"
+                          className="mt-2 h-11"
                           {...field} 
                         />
                       </FormControl>
@@ -184,20 +185,20 @@ export default function AddProductModal({ product, selectedVersionId, children }
             </div>
 
             {/* Product Information */}
-            <div className="bg-blue-50 p-4 rounded-lg space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Product Information</h3>
-              <div className="space-y-4">
+            <div className="bg-blue-50 p-6 rounded-lg space-y-5">
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Product Information</h3>
+              <div className="space-y-5">
                 <div>
-                  <FormLabel className="text-sm font-medium text-gray-700">Targeting Details</FormLabel>
-                  <div className="mt-1 p-3 bg-white border border-gray-200 rounded-md text-sm text-gray-700 leading-relaxed">
+                  <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">Targeting Details</FormLabel>
+                  <div className="mt-2 p-4 bg-white border border-gray-200 rounded-md text-sm text-gray-700 leading-relaxed">
                     {product.targetingDetails || "No targeting details specified"}
                   </div>
                 </div>
                 
                 <div>
-                  <FormLabel className="text-sm font-medium text-gray-700">Ad Sizes</FormLabel>
-                  <div className="mt-1 p-3 bg-white border border-gray-200 rounded-md text-sm text-gray-700">
-                    <div className="space-y-2">
+                  <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">Ad Sizes</FormLabel>
+                  <div className="mt-2 p-4 bg-white border border-gray-200 rounded-md text-sm text-gray-700">
+                    <div className="space-y-3">
                       {(product.adSizes || "No ad sizes specified").split(/(?=Desktop:|Tablet:|Mobile:)/g).filter(Boolean).map((platformGroup, index) => {
                         const lines = platformGroup.trim().split(' ');
                         const platform = lines[0]; // Desktop:, Tablet:, Mobile:
@@ -225,17 +226,17 @@ export default function AddProductModal({ product, selectedVersionId, children }
             </div>
 
             {/* Campaign Schedule */}
-            <div className="bg-green-50 p-4 rounded-lg space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Campaign Schedule</h3>
-              <div className="grid grid-cols-2 gap-4">
+            <div className="bg-green-50 p-6 rounded-lg space-y-5">
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Campaign Schedule</h3>
+              <div className="grid grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
                   name="startDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">Start Date</FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">Start Date</FormLabel>
                       <FormControl>
-                        <Input type="date" className="mt-1 h-11" {...field} />
+                        <Input type="date" className="mt-2 h-11" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -246,9 +247,9 @@ export default function AddProductModal({ product, selectedVersionId, children }
                   name="endDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">End Date</FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">End Date</FormLabel>
                       <FormControl>
-                        <Input type="date" className="mt-1 h-11" {...field} />
+                        <Input type="date" className="mt-2 h-11" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -258,18 +259,18 @@ export default function AddProductModal({ product, selectedVersionId, children }
             </div>
 
             {/* Pricing Information */}
-            <div className="bg-purple-50 p-4 rounded-lg space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Pricing Information</h3>
-              <div className="grid grid-cols-3 gap-4">
+            <div className="bg-purple-50 p-6 rounded-lg space-y-5">
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Pricing Information</h3>
+              <div className="grid grid-cols-3 gap-6">
                 <FormField
                   control={form.control}
                   name="rateModel"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">Rate Model</FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">Rate Model</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger className="mt-1 h-11">
+                          <SelectTrigger className="mt-2 h-11">
                             <SelectValue placeholder="Select rate model" />
                           </SelectTrigger>
                         </FormControl>
@@ -289,13 +290,13 @@ export default function AddProductModal({ product, selectedVersionId, children }
                   name="rate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">Rate ($)</FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">Rate ($)</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
                           step="0.01" 
                           placeholder="0.00" 
-                          className="mt-1 h-11"
+                          className="mt-2 h-11"
                           {...field} 
                         />
                       </FormControl>
@@ -308,12 +309,12 @@ export default function AddProductModal({ product, selectedVersionId, children }
                   name="units"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">Units</FormLabel>
+                      <FormLabel className="text-sm font-medium text-gray-700 mb-2 block">Units</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
                           placeholder="1,000,000" 
-                          className="mt-1 h-11"
+                          className="mt-2 h-11"
                           {...field} 
                         />
                       </FormControl>
@@ -325,7 +326,7 @@ export default function AddProductModal({ product, selectedVersionId, children }
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+            <div className="flex justify-end space-x-4 pt-8 border-t border-gray-200">
               <Button 
                 type="button" 
                 variant="outline" 
