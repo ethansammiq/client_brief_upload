@@ -535,7 +535,7 @@ export default function MediaPlanBuilder({
                         {editingLineItem === null && (
                           <>
                             <TableCell>
-                              <div className="max-w-[200px] text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2">
+                              <div className="max-w-[200px] max-h-[80px] text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2 overflow-y-auto table-cell-scroll">
                                 {(() => {
                                   const formatted = formatTargetingDetails(group.sharedData?.targetingDetails);
                                   return (
@@ -652,7 +652,7 @@ export default function MediaPlanBuilder({
                     const item = group.items[0];
                     const product = getProductById(item.productId);
                     return (
-                      <TableRow key={item.id} className="hover:bg-gray-50 h-16">
+                      <TableRow key={item.id} className="hover:bg-gray-50 h-20">
                         {/* Site - only show when not editing */}
                         {editingLineItem === null && (
                           <TableCell>
@@ -675,7 +675,7 @@ export default function MediaPlanBuilder({
                         {/* Targeting Details - only show when not editing */}
                         {editingLineItem === null && (
                           <TableCell>
-                            <div className="max-w-[200px] text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2">
+                            <div className="max-w-[200px] max-h-[80px] text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2 overflow-y-auto table-cell-scroll">
                               {(() => {
                                 const formatted = formatTargetingDetails(item.targetingDetails || product?.targetingDetails);
                                 return (
@@ -690,7 +690,7 @@ export default function MediaPlanBuilder({
                         {/* Ad Sizes - only show when not editing */}
                         {editingLineItem === null && (
                           <TableCell>
-                            <div className="text-sm space-y-1.5 min-w-[150px]">
+                            <div className="text-sm space-y-1.5 min-w-[150px] max-h-[80px] overflow-y-auto table-cell-scroll">
                               {(() => {
                                 const adSizesText = item.adSizes || product?.adSizes || '-';
                                 
