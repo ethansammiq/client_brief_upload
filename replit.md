@@ -14,6 +14,9 @@ This is a full-stack TypeScript application for managing RFP (Request for Propos
   - All RFP responses, media plans, and line items now persist between sessions
   - Maintained backward compatibility with existing frontend components
   - Database schema includes proper relationships and constraints for data integrity
+  - Implemented automatic calculation of media plan version totals (budget, impressions, CPM)
+  - Fixed issue where media plan versions showed incorrect totals when line items were added
+  - Added real-time recalculation of totals when line items are created, updated, or deleted
   - Campaign Date Integration, Enhanced User Experience, and Duplicate Plan Functionality
   - Added campaign start and end date fields to RFP response schema and create/edit forms
   - Updated campaign header to display campaign duration prominently alongside client and due date information

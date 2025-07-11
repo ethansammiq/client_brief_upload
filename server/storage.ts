@@ -522,6 +522,10 @@ export class DatabaseStorage implements IStorage {
       .insert(mediaPlanLineItems)
       .values(lineItem)
       .returning();
+    
+    // Update the media plan version totals
+    await this.updateMediaPlanVersionTotals(newLineItem.mediaPlanVersionId);
+    
     return newLineItem;
   }
 
@@ -534,11 +538,44 @@ export class DatabaseStorage implements IStorage {
     if (!updatedLineItem) {
       throw new Error(`Media Plan Line Item with id ${id} not found`);
     }
+    
+    // Update the media plan version totals
+    await this.updateMediaPlanVersionTotals(updatedLineItem.mediaPlanVersionId);
+    
     return updatedLineItem;
   }
 
   async deleteMediaPlanLineItem(id: number): Promise<void> {
+    // Get the line item to find the media plan version ID
+    const [lineItem] = await db.select().from(mediaPlanLineItems).where(eq(mediaPlanLineItems.id, id));
+    
     await db.delete(mediaPlanLineItems).where(eq(mediaPlanLineItems.id, id));
+    
+    // Update the media plan version totals after deletion
+    if (lineItem) {
+      await this.updateMediaPlanVersionTotals(lineItem.mediaPlanVersionId);
+    }
+  }
+
+  // Helper method to update media plan version totals
+  private async updateMediaPlanVersionTotals(mediaPlanVersionId: number): Promise<void> {
+    const lineItems = await db
+      .select()
+      .from(mediaPlanLineItems)
+      .where(eq(mediaPlanLineItems.mediaPlanVersionId, mediaPlanVersionId));
+
+    const totalBudget = lineItems.reduce((sum, item) => sum + parseFloat(item.totalCost), 0);
+    const totalImpressions = lineItems.reduce((sum, item) => sum + item.impressions, 0);
+    const avgCpm = totalImpressions > 0 ? (totalBudget / totalImpressions * 1000).toFixed(2) : "0.00";
+
+    await db
+      .update(mediaPlanVersions)
+      .set({
+        totalBudget: totalBudget.toFixed(2),
+        totalImpressions: totalImpressions,
+        avgCpm: avgCpm
+      })
+      .where(eq(mediaPlanVersions.id, mediaPlanVersionId));
   }
 }
 
