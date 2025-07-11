@@ -595,6 +595,20 @@ export default function MediaPlanBuilder({
                               size="sm"
                               variant="ghost"
                               onClick={() => {
+                                // Toggle editing for the first item in package (this will enable editing for the whole package)
+                                const firstItem = group.items[0];
+                                if (firstItem) {
+                                  setEditingLineItem(editingLineItem === firstItem.id ? null : firstItem.id);
+                                }
+                              }}
+                              className="text-blue-500 hover:text-blue-700 hover:bg-blue-50 p-1"
+                            >
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => {
                                 // Delete all items in package
                                 group.items.forEach(item => deleteLineItemMutation.mutate(item.id));
                               }}
