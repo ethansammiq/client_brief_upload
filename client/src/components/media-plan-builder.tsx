@@ -328,20 +328,31 @@ export default function MediaPlanBuilder({
                               placeholder="Ad sizes"
                             />
                           ) : (
-                            <div className="text-sm text-gray-900 space-y-1">
+                            <div className="text-sm space-y-1.5 min-w-[150px]">
                               {(item.adSizes || product?.adSizes || '-').split(/(?=Desktop:|Tablet:|Mobile:)/g).filter(Boolean).map((platformGroup, index) => {
-                                const lines = platformGroup.trim().split(' ');
-                                const platform = lines[0]; // Desktop:, Tablet:, Mobile:
-                                const sizes = lines.slice(1).join(' ').split(',').map(s => s.trim()).filter(Boolean);
+                                const trimmed = platformGroup.trim();
+                                const colonIndex = trimmed.indexOf(':');
+                                if (colonIndex === -1) return null;
+                                
+                                const platform = trimmed.substring(0, colonIndex);
+                                const sizesText = trimmed.substring(colonIndex + 1).trim();
+                                const sizes = sizesText.split(',').map(s => s.trim()).filter(Boolean);
                                 
                                 return (
-                                  <div key={index} className="flex items-center gap-1">
-                                    <span className="font-semibold text-gray-900 text-xs">
-                                      {platform}
-                                    </span>
-                                    <span className="text-xs text-gray-600">
-                                      {sizes.join(', ')}
-                                    </span>
+                                  <div key={index} className="space-y-1">
+                                    <div className="font-semibold text-gray-900 text-xs">
+                                      {platform}:
+                                    </div>
+                                    <div className="flex flex-wrap gap-1">
+                                      {sizes.map((size, sizeIndex) => (
+                                        <span 
+                                          key={sizeIndex}
+                                          className="inline-block px-1.5 py-0.5 bg-gray-100 text-gray-700 text-xs rounded border"
+                                        >
+                                          {size}
+                                        </span>
+                                      ))}
+                                    </div>
                                   </div>
                                 );
                               })}
