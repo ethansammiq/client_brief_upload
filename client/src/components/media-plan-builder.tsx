@@ -284,95 +284,135 @@ export default function MediaPlanBuilder({
                       <TableRow key={item.id} className="hover:bg-gray-50">
                         {/* Site */}
                         <TableCell>
-                          <Input
-                            value={item.site || ''}
-                            onChange={(e) => handleLineItemUpdate(item, 'site', e.target.value)}
-                            className="w-full text-sm"
-                            placeholder="Site name"
-                          />
+                          {editingLineItem === item.id ? (
+                            <Input
+                              value={item.site || ''}
+                              onChange={(e) => handleLineItemUpdate(item, 'site', e.target.value)}
+                              className="w-full text-sm"
+                              placeholder="Site name"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-900">{item.site || '-'}</span>
+                          )}
                         </TableCell>
                         {/* Placement Name */}
                         <TableCell>
-                          <Input
-                            value={item.placementName || item.lineItemName}
-                            onChange={(e) => handleLineItemUpdate(item, 'placementName', e.target.value)}
-                            className="w-full text-sm"
-                            placeholder="Placement name"
-                          />
+                          {editingLineItem === item.id ? (
+                            <Input
+                              value={item.placementName || item.lineItemName}
+                              onChange={(e) => handleLineItemUpdate(item, 'placementName', e.target.value)}
+                              className="w-full text-sm"
+                              placeholder="Placement name"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-900">{item.placementName || item.lineItemName}</span>
+                          )}
                         </TableCell>
                         {/* Targeting Details */}
                         <TableCell>
-                          <Input
-                            value={item.targetingDetails || product?.targetingDetails || ''}
-                            onChange={(e) => handleLineItemUpdate(item, 'targetingDetails', e.target.value)}
-                            className="w-full text-sm"
-                            placeholder="Targeting details"
-                          />
+                          {editingLineItem === item.id ? (
+                            <Input
+                              value={item.targetingDetails || product?.targetingDetails || ''}
+                              onChange={(e) => handleLineItemUpdate(item, 'targetingDetails', e.target.value)}
+                              className="w-full text-sm"
+                              placeholder="Targeting details"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-600 max-w-[200px] truncate inline-block">
+                              {item.targetingDetails || product?.targetingDetails || '-'}
+                            </span>
+                          )}
                         </TableCell>
                         {/* Ad Sizes */}
                         <TableCell>
-                          <Input
-                            value={item.adSizes || product?.adSizes || ''}
-                            onChange={(e) => handleLineItemUpdate(item, 'adSizes', e.target.value)}
-                            className="w-full text-sm"
-                            placeholder="Ad sizes"
-                          />
+                          {editingLineItem === item.id ? (
+                            <Input
+                              value={item.adSizes || product?.adSizes || ''}
+                              onChange={(e) => handleLineItemUpdate(item, 'adSizes', e.target.value)}
+                              className="w-full text-sm"
+                              placeholder="Ad sizes"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-900">{item.adSizes || product?.adSizes || '-'}</span>
+                          )}
                         </TableCell>
                         {/* Start Date */}
                         <TableCell>
-                          <Input
-                            type="date"
-                            value={item.startDate || ''}
-                            onChange={(e) => handleLineItemUpdate(item, 'startDate', e.target.value)}
-                            className="w-full text-sm"
-                          />
+                          {editingLineItem === item.id ? (
+                            <Input
+                              type="date"
+                              value={item.startDate || ''}
+                              onChange={(e) => handleLineItemUpdate(item, 'startDate', e.target.value)}
+                              className="w-full text-sm"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-900">{item.startDate || '-'}</span>
+                          )}
                         </TableCell>
                         {/* End Date */}
                         <TableCell>
-                          <Input
-                            type="date"
-                            value={item.endDate || ''}
-                            onChange={(e) => handleLineItemUpdate(item, 'endDate', e.target.value)}
-                            className="w-full text-sm"
-                          />
+                          {editingLineItem === item.id ? (
+                            <Input
+                              type="date"
+                              value={item.endDate || ''}
+                              onChange={(e) => handleLineItemUpdate(item, 'endDate', e.target.value)}
+                              className="w-full text-sm"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-900">{item.endDate || '-'}</span>
+                          )}
                         </TableCell>
                         {/* Rate Model */}
                         <TableCell>
-                          <Select 
-                            value={item.rateModel || 'CPM'} 
-                            onValueChange={(value) => handleLineItemUpdate(item, 'rateModel', value)}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="CPM">CPM</SelectItem>
-                              <SelectItem value="dCPM">dCPM</SelectItem>
-                              <SelectItem value="CPCV">CPCV</SelectItem>
-                              <SelectItem value="CPC">CPC</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          {editingLineItem === item.id ? (
+                            <Select 
+                              value={item.rateModel || 'CPM'} 
+                              onValueChange={(value) => handleLineItemUpdate(item, 'rateModel', value)}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="CPM">CPM</SelectItem>
+                                <SelectItem value="dCPM">dCPM</SelectItem>
+                                <SelectItem value="CPCV">CPCV</SelectItem>
+                                <SelectItem value="CPC">CPC</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <Badge variant="outline" className="text-xs">
+                              {item.rateModel || 'CPM'}
+                            </Badge>
+                          )}
                         </TableCell>
                         {/* Rate ($) */}
                         <TableCell>
-                          <Input
-                            type="number"
-                            step="0.01"
-                            value={item.cpmRate}
-                            onChange={(e) => handleLineItemUpdate(item, 'cpmRate', e.target.value)}
-                            className="w-full text-sm"
-                            placeholder="0.00"
-                          />
+                          {editingLineItem === item.id ? (
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={item.cpmRate}
+                              onChange={(e) => handleLineItemUpdate(item, 'cpmRate', e.target.value)}
+                              className="w-full text-sm"
+                              placeholder="0.00"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-900">${parseFloat(item.cpmRate).toFixed(2)}</span>
+                          )}
                         </TableCell>
                         {/* Units (Impressions) */}
                         <TableCell>
-                          <Input
-                            type="number"
-                            value={item.impressions}
-                            onChange={(e) => handleLineItemUpdate(item, 'impressions', parseInt(e.target.value) || 0)}
-                            className="w-full text-sm"
-                            placeholder="0"
-                          />
+                          {editingLineItem === item.id ? (
+                            <Input
+                              type="number"
+                              value={item.impressions}
+                              onChange={(e) => handleLineItemUpdate(item, 'impressions', parseInt(e.target.value) || 0)}
+                              className="w-full text-sm"
+                              placeholder="0"
+                            />
+                          ) : (
+                            <span className="text-sm text-gray-900">{item.impressions.toLocaleString()}</span>
+                          )}
                         </TableCell>
                         {/* Cost ($) */}
                         <TableCell>
@@ -389,7 +429,13 @@ export default function MediaPlanBuilder({
                               onClick={() => setEditingLineItem(editingLineItem === item.id ? null : item.id)}
                               className="text-blue-500 hover:text-blue-700 px-2"
                             >
-                              <Edit className="w-4 h-4" />
+                              {editingLineItem === item.id ? (
+                                <>
+                                  <span className="text-xs mr-1">Save</span>
+                                </>
+                              ) : (
+                                <Edit className="w-4 h-4" />
+                              )}
                             </Button>
                             <Button
                               size="sm"

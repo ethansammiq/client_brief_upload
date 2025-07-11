@@ -6,14 +6,16 @@ This is a full-stack TypeScript application for managing RFP (Request for Propos
 
 ## Recent Changes
 
-- **July 11, 2025**: Expanded Media Plan Chart Structure
+- **July 11, 2025**: Expanded Media Plan Chart Structure with Modal-Based Product Addition
   - Fixed campaign creation and data flow issues - campaigns now properly display correct title, client name, and due date
-  - Expanded media plan chart to include comprehensive new fields: Site, Placement Name, Targeting Details, Ad Sizes, Start Date, End Date, Rate ($/CPM), Rate ($), Units, and Cost ($)
-  - Updated database schema to support all new media plan line item fields with proper defaults
+  - Expanded media plan chart to include comprehensive new fields: Site, Placement Name, Targeting Details, Ad Sizes, Start Date, End Date, Rate (Model), Rate ($), Units, and Cost ($)
+  - Updated database schema to support all new media plan line item fields including rateModel with proper defaults
   - Enhanced MediaPlanBuilder component with expanded table structure accommodating all requested columns
-  - Added support for both CPM-based and flat rate pricing models with automatic cost calculation
-  - Implemented editable fields for all new data points with proper input validation
-  - Updated ProductLibrary component to pass default values for new fields when adding products
+  - Implemented modal-based product addition workflow with comprehensive form including all campaign details
+  - Added Rate Model dropdown with CPM, dCPM, CPCV, and CPC options with automatic cost calculation
+  - Changed media plan table from live text boxes to display-only mode with edit button for controlled editing
+  - Added per-row edit functionality - click Edit button to make fields editable, Save to finish editing
+  - Updated ProductLibrary component to use modal workflow instead of direct click-to-add
   - Maintained horizontal scrolling for the expanded table structure to ensure all fields are accessible
 
 - **July 10, 2025**: Complete Media Planner redesign with card-based layout
