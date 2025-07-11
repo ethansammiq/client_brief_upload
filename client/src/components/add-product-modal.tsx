@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -75,6 +75,15 @@ export default function AddProductModal({ product, selectedVersionId, children, 
       units: "1000000",
     },
   });
+
+  // Update form values when campaign dates are available
+  useEffect(() => {
+    if (campaignStartDate && campaignEndDate) {
+      console.log("Setting campaign dates:", campaignStartDate, campaignEndDate);
+      form.setValue("startDate", campaignStartDate);
+      form.setValue("endDate", campaignEndDate);
+    }
+  }, [campaignStartDate, campaignEndDate, form]);
 
   const addToMediaPlanMutation = useMutation({
     mutationFn: async (data: AddProductForm) => {
