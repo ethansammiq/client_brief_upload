@@ -6,6 +6,16 @@ This is a full-stack TypeScript application for managing RFP (Request for Propos
 
 ## Recent Changes
 
+- **July 11, 2025**: Expanded Media Plan Chart Structure
+  - Fixed campaign creation and data flow issues - campaigns now properly display correct title, client name, and due date
+  - Expanded media plan chart to include comprehensive new fields: Site, Placement Name, Targeting Details, Ad Sizes, Start Date, End Date, Rate ($/CPM), Rate ($), Units, and Cost ($)
+  - Updated database schema to support all new media plan line item fields with proper defaults
+  - Enhanced MediaPlanBuilder component with expanded table structure accommodating all requested columns
+  - Added support for both CPM-based and flat rate pricing models with automatic cost calculation
+  - Implemented editable fields for all new data points with proper input validation
+  - Updated ProductLibrary component to pass default values for new fields when adding products
+  - Maintained horizontal scrolling for the expanded table structure to ensure all fields are accessible
+
 - **July 10, 2025**: Complete Media Planner redesign with card-based layout
   - Redesigned entire Media Planner tab with modern card-based layout inspired by MiQ platform
   - Repositioned product catalog above media plan section in separate card container

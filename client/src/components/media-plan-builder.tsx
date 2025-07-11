@@ -146,10 +146,18 @@ export default function MediaPlanBuilder({
   const handleLineItemUpdate = (lineItem: MediaPlanLineItem, field: string, value: string | number) => {
     const updatedItem = { ...lineItem, [field]: value };
     
-    if (field === 'cpmRate' || field === 'impressions') {
-      const cpm = parseFloat(updatedItem.cpmRate);
-      const impressions = updatedItem.impressions;
-      updatedItem.totalCost = ((cpm * impressions) / 1000).toFixed(2);
+    // Calculate total cost based on CPM rate and impressions, or use flat rate if specified
+    if (field === 'cpmRate' || field === 'impressions' || field === 'flatRate') {
+      const cpm = parseFloat(updatedItem.cpmRate || '0');
+      const impressions = updatedItem.impressions || 0;
+      const flatRate = parseFloat(updatedItem.flatRate || '0');
+      
+      // If flat rate is specified, use it; otherwise calculate from CPM
+      if (flatRate > 0) {
+        updatedItem.totalCost = flatRate.toFixed(2);
+      } else {
+        updatedItem.totalCost = ((cpm * impressions) / 1000).toFixed(2);
+      }
     }
     
     updateLineItemMutation.mutate({ id: lineItem.id, data: updatedItem });
@@ -218,28 +226,37 @@ export default function MediaPlanBuilder({
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Line Item / Placement
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
+                    Site
                   </TableHead>
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Product Type
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[180px]">
+                    Placement Name
                   </TableHead>
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
                     Targeting Details
                   </TableHead>
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
                     Ad Sizes
                   </TableHead>
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    CPM Rate
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
+                    Start Date
                   </TableHead>
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Impressions
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
+                    End Date
                   </TableHead>
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Total Cost
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
+                    Rate ($/cpm)
                   </TableHead>
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
+                    Rate ($)
+                  </TableHead>
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
+                    Units
+                  </TableHead>
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
+                    Cost ($)
+                  </TableHead>
+                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[80px]">
                     Actions
                   </TableHead>
                 </TableRow>
@@ -247,7 +264,7 @@ export default function MediaPlanBuilder({
               <TableBody>
                 {lineItems.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-gray-500">
+                    <TableCell colSpan={11} className="text-center py-8 text-gray-500">
                       No line items yet. Add products from the library to get started.
                     </TableCell>
                   </TableRow>
@@ -256,71 +273,107 @@ export default function MediaPlanBuilder({
                     const product = getProductById(item.productId);
                     return (
                       <TableRow key={item.id} className="hover:bg-gray-50">
-                        <TableCell className="max-w-xs">
+                        {/* Site */}
+                        <TableCell>
                           <Input
-                            value={item.lineItemName}
-                            onChange={(e) => handleLineItemUpdate(item, 'lineItemName', e.target.value)}
+                            value={item.site || ''}
+                            onChange={(e) => handleLineItemUpdate(item, 'site', e.target.value)}
+                            className="w-full text-sm"
+                            placeholder="Site name"
+                          />
+                        </TableCell>
+                        {/* Placement Name */}
+                        <TableCell>
+                          <Input
+                            value={item.placementName || item.lineItemName}
+                            onChange={(e) => handleLineItemUpdate(item, 'placementName', e.target.value)}
+                            className="w-full text-sm"
+                            placeholder="Placement name"
+                          />
+                        </TableCell>
+                        {/* Targeting Details */}
+                        <TableCell>
+                          <Input
+                            value={item.targetingDetails || product?.targetingDetails || ''}
+                            onChange={(e) => handleLineItemUpdate(item, 'targetingDetails', e.target.value)}
+                            className="w-full text-sm"
+                            placeholder="Targeting details"
+                          />
+                        </TableCell>
+                        {/* Ad Sizes */}
+                        <TableCell>
+                          <Input
+                            value={item.adSizes || product?.adSizes || ''}
+                            onChange={(e) => handleLineItemUpdate(item, 'adSizes', e.target.value)}
+                            className="w-full text-sm"
+                            placeholder="Ad sizes"
+                          />
+                        </TableCell>
+                        {/* Start Date */}
+                        <TableCell>
+                          <Input
+                            type="date"
+                            value={item.startDate || ''}
+                            onChange={(e) => handleLineItemUpdate(item, 'startDate', e.target.value)}
                             className="w-full text-sm"
                           />
                         </TableCell>
+                        {/* End Date */}
                         <TableCell>
-                          <Badge 
-                            variant="secondary" 
-                            className={getCategoryColor(product?.category || 'Display')}
-                          >
-                            {product?.name || 'Unknown'}
-                          </Badge>
+                          <Input
+                            type="date"
+                            value={item.endDate || ''}
+                            onChange={(e) => handleLineItemUpdate(item, 'endDate', e.target.value)}
+                            className="w-full text-sm"
+                          />
                         </TableCell>
-                        <TableCell className="max-w-sm">
-                          <div className="text-xs text-gray-600">
-                            {product?.targetingDetails ? product.targetingDetails.substring(0, 100) + '...' : 'N/A'}
-                          </div>
-                        </TableCell>
-                        <TableCell className="max-w-xs">
-                          <div className="text-xs text-gray-600">
-                            {product?.adSizes || 'N/A'}
-                          </div>
-                        </TableCell>
+                        {/* Rate ($/cpm) */}
                         <TableCell>
-                          <div className="flex items-center">
-                            <span className="text-sm text-gray-500 mr-1">$</span>
-                            <Input
-                              type="number"
-                              step="0.01"
-                              value={item.cpmRate}
-                              onChange={(e) => handleLineItemUpdate(item, 'cpmRate', e.target.value)}
-                              className="w-20"
-                            />
-                          </div>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            value={item.cpmRate}
+                            onChange={(e) => handleLineItemUpdate(item, 'cpmRate', e.target.value)}
+                            className="w-full text-sm"
+                            placeholder="0.00"
+                          />
                         </TableCell>
+                        {/* Rate ($) - Flat Rate */}
+                        <TableCell>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            value={item.flatRate || '0'}
+                            onChange={(e) => handleLineItemUpdate(item, 'flatRate', e.target.value)}
+                            className="w-full text-sm"
+                            placeholder="0.00"
+                          />
+                        </TableCell>
+                        {/* Units (Impressions) */}
                         <TableCell>
                           <Input
                             type="number"
                             value={item.impressions}
                             onChange={(e) => handleLineItemUpdate(item, 'impressions', parseInt(e.target.value) || 0)}
-                            className="w-24"
+                            className="w-full text-sm"
+                            placeholder="0"
                           />
                         </TableCell>
+                        {/* Cost ($) */}
                         <TableCell>
-                          <span className="text-sm font-medium text-secondary">
+                          <span className="text-sm font-medium text-gray-900">
                             ${parseFloat(item.totalCost).toLocaleString()}
                           </span>
                         </TableCell>
+                        {/* Actions */}
                         <TableCell>
-                          <div className="flex space-x-2">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="text-primary hover:text-blue-700"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
+                          <div className="flex space-x-1">
                             <Button
                               size="sm"
                               variant="ghost"
                               onClick={() => deleteLineItemMutation.mutate(item.id)}
                               disabled={deleteLineItemMutation.isPending}
-                              className="text-red-500 hover:text-red-700"
+                              className="text-red-500 hover:text-red-700 px-2"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
