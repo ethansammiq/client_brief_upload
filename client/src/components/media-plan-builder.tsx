@@ -106,6 +106,8 @@ export default function MediaPlanBuilder({
         const newLineItem = {
           mediaPlanVersionId: createdVersion.id,
           productId: item.productId,
+          lineItemName: item.lineItemName,
+          site: item.site,
           placementName: item.placementName,
           targetingDetails: item.targetingDetails,
           adSizes: item.adSizes,
@@ -113,8 +115,10 @@ export default function MediaPlanBuilder({
           endDate: item.endDate,
           rateModel: item.rateModel,
           cpmRate: item.cpmRate,
+          flatRate: item.flatRate,
           impressions: item.impressions,
           totalCost: item.totalCost,
+          sortOrder: item.sortOrder,
         };
         return apiRequest("POST", "/api/line-items", newLineItem);
       });
