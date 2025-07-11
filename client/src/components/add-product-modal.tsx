@@ -36,8 +36,8 @@ import type { Product, InsertMediaPlanLineItem } from "@shared/schema";
 const addProductSchema = z.object({
   site: z.string().min(1, "Site is required"),
   placementName: z.string().min(1, "Placement name is required"),
-  targetingDetails: z.string().min(1, "Targeting details are required"),
-  adSizes: z.string().min(1, "Ad sizes are required"),
+  targetingDetails: z.string().optional(),
+  adSizes: z.string().optional(),
   startDate: z.string().min(1, "Start date is required"),
   endDate: z.string().min(1, "End date is required"),
   rateModel: z.enum(["CPM", "dCPM", "CPCV", "CPC"]),
@@ -61,7 +61,7 @@ export default function AddProductModal({ product, selectedVersionId, children }
   const form = useForm<AddProductForm>({
     resolver: zodResolver(addProductSchema),
     defaultValues: {
-      site: "",
+      site: "MiQ",
       placementName: product.placementName || "",
       targetingDetails: product.targetingDetails || "",
       adSizes: product.adSizes || "",
@@ -97,10 +97,10 @@ export default function AddProductModal({ product, selectedVersionId, children }
         mediaPlanVersionId: selectedVersionId,
         productId: product.id,
         lineItemName: data.placementName,
-        site: data.site,
+        site: "MiQ",
         placementName: data.placementName,
-        targetingDetails: data.targetingDetails,
-        adSizes: data.adSizes,
+        targetingDetails: product.targetingDetails,
+        adSizes: product.adSizes,
         startDate: data.startDate,
         endDate: data.endDate,
         rateModel: data.rateModel,
@@ -149,19 +149,12 @@ export default function AddProductModal({ product, selectedVersionId, children }
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="site"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Site</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter site name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div>
+                <FormLabel>Site</FormLabel>
+                <div className="mt-1 p-3 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700">
+                  MiQ
+                </div>
+              </div>
               <FormField
                 control={form.control}
                 name="placementName"
@@ -177,37 +170,21 @@ export default function AddProductModal({ product, selectedVersionId, children }
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="targetingDetails"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Targeting Details</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Enter targeting details" 
-                      rows={3}
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="adSizes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Ad Sizes</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., 728x90, 300x250" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-4">
+              <div>
+                <FormLabel>Targeting Details</FormLabel>
+                <div className="mt-1 p-3 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700">
+                  {product.targetingDetails || "No targeting details specified"}
+                </div>
+              </div>
+              
+              <div>
+                <FormLabel>Ad Sizes</FormLabel>
+                <div className="mt-1 p-3 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700">
+                  {product.adSizes || "No ad sizes specified"}
+                </div>
+              </div>
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <FormField

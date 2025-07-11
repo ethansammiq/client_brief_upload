@@ -285,14 +285,9 @@ export default function MediaPlanBuilder({
                         {/* Site */}
                         <TableCell>
                           {editingLineItem === item.id ? (
-                            <Input
-                              value={item.site || ''}
-                              onChange={(e) => handleLineItemUpdate(item, 'site', e.target.value)}
-                              className="w-full text-sm"
-                              placeholder="Site name"
-                            />
+                            <div className="text-sm text-gray-900 py-2">MiQ</div>
                           ) : (
-                            <span className="text-sm text-gray-900">{item.site || '-'}</span>
+                            <span className="text-sm text-gray-900">MiQ</span>
                           )}
                         </TableCell>
                         {/* Placement Name */}
