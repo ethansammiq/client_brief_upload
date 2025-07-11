@@ -108,15 +108,9 @@ function MediaPlanCard({ plan, onSelectPlan }: MediaPlanCardProps) {
             </p>
           )}
           
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <div className="flex items-center">
-              <Calendar className="w-4 h-4 mr-1" />
-              Due: {new Date(plan.dueDate).toLocaleDateString()}
-            </div>
-            <div className="flex items-center">
-              <DollarSign className="w-4 h-4 mr-1" />
-              ${plan.budget?.toLocaleString() || '0'}
-            </div>
+          <div className="flex items-center text-sm text-gray-500">
+            <Calendar className="w-4 h-4 mr-1" />
+            Due: {new Date(plan.dueDate).toLocaleDateString()}
           </div>
 
           {plan.objectives && (
