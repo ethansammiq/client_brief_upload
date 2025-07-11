@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, Search, Settings } from "lucide-react";
+import miqLogo from "@assets/MIQ WHITE LOGO_1752201666702.png";
 
 export default function TopNavigation() {
   const navItems = [
@@ -19,7 +20,7 @@ export default function TopNavigation() {
         {/* MiQ Logo - Fixed width container */}
         <div className="flex items-center space-x-2 w-24">
           <img 
-            src="/attached_assets/MIQ WHITE LOGO_1752201666702.png" 
+            src={miqLogo} 
             alt="MiQ" 
             className="h-6 w-auto"
           />
