@@ -194,6 +194,42 @@ export default function MediaPlanBuilder({
     },
   });
 
+  const duplicateLineItemMutation = useMutation({
+    mutationFn: async (lineItem: MediaPlanLineItem) => {
+      const duplicatedItem = {
+        mediaPlanVersionId: lineItem.mediaPlanVersionId,
+        productId: lineItem.productId,
+        lineItemName: `${lineItem.lineItemName} (Copy)`,
+        site: lineItem.site,
+        placementName: lineItem.placementName ? `${lineItem.placementName} (Copy)` : `${lineItem.lineItemName} (Copy)`,
+        targetingDetails: lineItem.targetingDetails || '',
+        adSizes: lineItem.adSizes || '',
+        startDate: lineItem.startDate,
+        endDate: lineItem.endDate,
+        rateModel: lineItem.rateModel,
+        cpmRate: lineItem.cpmRate,
+        flatRate: lineItem.flatRate,
+        impressions: lineItem.impressions,
+        totalCost: lineItem.totalCost,
+        sortOrder: lineItem.sortOrder
+      };
+      
+      return apiRequest("POST", "/api/line-items", duplicatedItem);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ 
+        queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: [`/api/rfp-responses/${rfpResponse?.id}/media-plan-versions`] 
+      });
+      toast({
+        title: "Duplicated",
+        description: "Line item has been duplicated.",
+      });
+    },
+  });
+
   const getProductById = (productId: number) => {
     return products.find(p => p.id === productId);
   };
@@ -562,6 +598,16 @@ export default function MediaPlanBuilder({
                               ) : (
                                 <Edit className="w-4 h-4" />
                               )}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => duplicateLineItemMutation.mutate(item)}
+                              disabled={duplicateLineItemMutation.isPending}
+                              className="text-green-500 hover:text-green-700 px-2"
+                              title="Duplicate line item"
+                            >
+                              <Copy className="w-4 h-4" />
                             </Button>
                             <Button
                               size="sm"
