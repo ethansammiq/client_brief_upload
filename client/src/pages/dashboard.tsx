@@ -9,7 +9,9 @@ import MediaPlansLibrary from "@/components/media-plans-library";
 import { Button } from "@/components/ui/button";
 import { Download, Save, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import type { RfpResponse, MediaPlanVersion } from "@shared/schema";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import type { RfpResponse, MediaPlanVersion, MediaPlanLineItem } from "@shared/schema";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<string>("media-planner");
@@ -50,11 +52,231 @@ export default function Dashboard() {
     setSelectedRfpId(null);
   };
 
-  const handleExportPlan = () => {
-    toast({
-      title: "Export Started",
-      description: "Your media plan is being exported...",
+  const handleExportPlan = async () => {
+    if (!currentRfp || !mediaPlanVersions.length) {
+      toast({
+        title: "Export Failed",
+        description: "No media plan data available to export.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: "Export Started",
+        description: "Your media plan is being exported...",
+      });
+
+      // Create new workbook
+      const workbook = XLSX.utils.book_new();
+
+      // Create summary worksheet
+      const summaryData = [
+        ['Media Plan Summary'],
+        [''],
+        ['Campaign Title', currentRfp.title],
+        ['Client', currentRfp.clientName],
+        ['Due Date', currentRfp.dueDate],
+        ['Campaign Start Date', currentRfp.campaignStartDate || 'Not specified'],
+        ['Campaign End Date', currentRfp.campaignEndDate || 'Not specified'],
+        ['Total Budget', currentRfp.totalBudget || 'Not specified'],
+        ['Target Audience', currentRfp.targetAudience || 'Not specified'],
+        [''],
+        ['Plan Versions', mediaPlanVersions.length],
+        [''],
+        ['Version Details:'],
+        ['Version Name', 'Budget', 'Impressions', 'CPM', 'Line Items']
+      ];
+
+      // Add version summary data
+      for (const version of mediaPlanVersions) {
+        summaryData.push([
+          version.name,
+          version.totalBudget || 0,
+          version.totalImpressions || 0,
+          version.avgCpm || 0,
+          '' // Line item count will be populated after fetching
+        ]);
+      }
+
+      const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+      XLSX.utils.book_append_sheet(workbook, summaryWs, 'Summary');
+
+      // Create worksheet for each version
+      for (const version of mediaPlanVersions) {
+        // Fetch line items for this version
+        const lineItemsResponse = await fetch(`/api/media-plan-versions/${version.id}/line-items`);
+        const lineItems: MediaPlanLineItem[] = lineItemsResponse.ok ? await lineItemsResponse.json() : [];
+
+        // Create headers
+        const headers = [
+          'Line Item Name',
+          'Product Name',
+          'Placement Name',
+          'Ad Sizes',
+          'Budget',
+          'Impressions',
+          'CPM',
+          'Start Date',
+          'End Date',
+          'Targeting Details'
+        ];
+
+        // Create data rows
+        const data = [headers];
+        
+        // Group YouTube packages
+        const groupedItems = groupYouTubePackages(lineItems);
+        
+        groupedItems.forEach(group => {
+          if (group.isPackage) {
+            // Package parent row
+            const packageRow = [
+              group.packageName,
+              group.productName,
+              group.placementName,
+              group.adSizes,
+              group.budget,
+              group.impressions,
+              group.cpm,
+              group.startDate,
+              group.endDate,
+              group.targetingDetails
+            ];
+            data.push(packageRow);
+            
+            // Child placement rows
+            group.children.forEach(child => {
+              const childRow = [
+                `  └ ${child.name}`,
+                '',
+                child.placementName,
+                child.adSizes,
+                '',
+                '',
+                '',
+                '',
+                '',
+                child.targetingDetails
+              ];
+              data.push(childRow);
+            });
+          } else {
+            // Regular line item
+            const item = group.items[0];
+            const row = [
+              item.name,
+              item.productName,
+              item.placementName,
+              item.adSizes,
+              item.budget,
+              item.impressions,
+              item.cpm,
+              item.startDate,
+              item.endDate,
+              item.targetingDetails
+            ];
+            data.push(row);
+          }
+        });
+
+        // Create worksheet
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        
+        // Set column widths
+        const columnWidths = [
+          { wch: 30 }, // Line Item Name
+          { wch: 25 }, // Product Name
+          { wch: 30 }, // Placement Name
+          { wch: 20 }, // Ad Sizes
+          { wch: 15 }, // Budget
+          { wch: 15 }, // Impressions
+          { wch: 10 }, // CPM
+          { wch: 12 }, // Start Date
+          { wch: 12 }, // End Date
+          { wch: 50 }  // Targeting Details
+        ];
+        ws['!cols'] = columnWidths;
+
+        // Add worksheet to workbook
+        const sheetName = version.name.substring(0, 31); // Excel sheet name limit
+        XLSX.utils.book_append_sheet(workbook, ws, sheetName);
+      }
+
+      // Generate file and save
+      const fileName = `${currentRfp.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_')}_MediaPlan_${new Date().toISOString().split('T')[0]}.xlsx`;
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      
+      saveAs(blob, fileName);
+
+      toast({
+        title: "Export Complete",
+        description: `Media plan exported as ${fileName}`,
+      });
+
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: "Export Failed",
+        description: "An error occurred while exporting the media plan.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Helper function to group YouTube packages
+  const groupYouTubePackages = (lineItems: MediaPlanLineItem[]) => {
+    const groups: any[] = [];
+    const packageMap = new Map<string, any>();
+    
+    lineItems.forEach(item => {
+      if (item.name.includes('YouTube - ') && item.name.includes(' - ')) {
+        const parts = item.name.split(' - ');
+        if (parts.length >= 3) {
+          const packageName = `${parts[0]} - ${parts[1]}`;
+          const placementName = parts[2];
+          
+          if (!packageMap.has(packageName)) {
+            packageMap.set(packageName, {
+              isPackage: true,
+              packageName,
+              productName: item.productName,
+              placementName: item.placementName,
+              adSizes: 'Package',
+              budget: item.budget,
+              impressions: item.impressions,
+              cpm: item.cpm,
+              startDate: item.startDate,
+              endDate: item.endDate,
+              targetingDetails: item.targetingDetails,
+              children: []
+            });
+          }
+          
+          const packageGroup = packageMap.get(packageName);
+          packageGroup.children.push({
+            name: placementName,
+            placementName: item.placementName,
+            adSizes: item.adSizes,
+            targetingDetails: item.targetingDetails
+          });
+        }
+      } else {
+        groups.push({
+          isPackage: false,
+          items: [item]
+        });
+      }
     });
+    
+    // Add package groups to main groups
+    packageMap.forEach(packageGroup => {
+      groups.push(packageGroup);
+    });
+    
+    return groups;
   };
 
   const handleSaveRfp = () => {
