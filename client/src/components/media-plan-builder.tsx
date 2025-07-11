@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -37,12 +37,20 @@ export default function MediaPlanBuilder({
   const currentVersion = mediaPlanVersions.find(v => v.id === selectedVersionId);
 
   // Get line items for selected version
-  const lineItems = queryClient.getQueryData<MediaPlanLineItem[]>([
-    `/api/media-plan-versions/${selectedVersionId}/line-items`
-  ]) || [];
+  const { data: lineItems = [], isLoading: isLineItemsLoading } = useQuery<MediaPlanLineItem[]>({
+    queryKey: [`/api/media-plan-versions/${selectedVersionId}/line-items`],
+    enabled: !!selectedVersionId,
+  });
 
   // Get products for category lookup
-  const products = queryClient.getQueryData<Product[]>(['/api/products']) || [];
+  const { data: products = [] } = useQuery<Product[]>({
+    queryKey: ['/api/products'],
+  });
+
+  // Debug logging
+  console.log('Line items:', lineItems);
+  console.log('Selected version ID:', selectedVersionId);
+  console.log('Is loading:', isLineItemsLoading);
 
   const createVersionMutation = useMutation({
     mutationFn: async () => {
@@ -252,10 +260,12 @@ export default function MediaPlanBuilder({
   // Group YouTube package line items
   const groupLineItems = () => {
     // Temporarily show all items as individual to debug
-    return lineItems.map(item => ({
+    const grouped = lineItems.map(item => ({
       type: 'individual' as const,
       items: [item]
     }));
+    console.log('Grouped items:', grouped);
+    return grouped;
   };
 
   const calculateTotals = () => {
@@ -417,7 +427,13 @@ export default function MediaPlanBuilder({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {lineItems.length === 0 ? (
+              {isLineItemsLoading ? (
+                <TableRow>
+                  <TableCell colSpan={editingLineItem === null ? 11 : 7} className="text-center py-8 text-gray-500">
+                    Loading line items...
+                  </TableCell>
+                </TableRow>
+              ) : lineItems.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={editingLineItem === null ? 11 : 7} className="text-center py-8 text-gray-500">
                     No line items yet. Add products from the library to get started.
