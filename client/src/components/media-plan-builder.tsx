@@ -325,18 +325,24 @@ export default function MediaPlanBuilder({
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
-                    Site
-                  </TableHead>
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[180px]">
+                  {editingLineItem === null && (
+                    <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
+                      Site
+                    </TableHead>
+                  )}
+                  <TableHead className={`text-xs font-medium text-gray-500 uppercase tracking-wider ${editingLineItem !== null ? 'min-w-[300px]' : 'min-w-[180px]'}`}>
                     Placement Name
                   </TableHead>
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
-                    Targeting Details
-                  </TableHead>
-                  <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
-                    Ad Sizes
-                  </TableHead>
+                  {editingLineItem === null && (
+                    <>
+                      <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
+                        Targeting Details
+                      </TableHead>
+                      <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+                        Ad Sizes
+                      </TableHead>
+                    </>
+                  )}
                   <TableHead className="text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
                     Start Date
                   </TableHead>
@@ -363,7 +369,7 @@ export default function MediaPlanBuilder({
               <TableBody>
                 {lineItems.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={11} className="text-center py-8 text-gray-500">
+                    <TableCell colSpan={editingLineItem === null ? 11 : 7} className="text-center py-8 text-gray-500">
                       No line items yet. Add products from the library to get started.
                     </TableCell>
                   </TableRow>
@@ -372,15 +378,13 @@ export default function MediaPlanBuilder({
                     const product = getProductById(item.productId);
                     return (
                       <TableRow key={item.id} className="hover:bg-gray-50 h-16">
-                        {/* Site */}
-                        <TableCell>
-                          {editingLineItem === item.id ? (
-                            <div className="text-sm text-gray-900 py-2">MiQ</div>
-                          ) : (
+                        {/* Site - only show when not editing */}
+                        {editingLineItem === null && (
+                          <TableCell>
                             <span className="text-sm text-gray-900">MiQ</span>
-                          )}
-                        </TableCell>
-                        {/* Placement Name */}
+                          </TableCell>
+                        )}
+                        {/* Placement Name - wider when editing */}
                         <TableCell>
                           {editingLineItem === item.id ? (
                             <Input
@@ -393,31 +397,17 @@ export default function MediaPlanBuilder({
                             <span className="text-sm text-gray-900">{item.placementName || item.lineItemName}</span>
                           )}
                         </TableCell>
-                        {/* Targeting Details */}
-                        <TableCell>
-                          {editingLineItem === item.id ? (
-                            <textarea
-                              value={item.targetingDetails || product?.targetingDetails || ''}
-                              onChange={(e) => handleLineItemUpdate(item, 'targetingDetails', e.target.value)}
-                              className="w-full text-sm h-20 p-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Targeting details"
-                            />
-                          ) : (
+                        {/* Targeting Details - only show when not editing */}
+                        {editingLineItem === null && (
+                          <TableCell>
                             <div className="max-w-[200px] text-sm text-gray-600 leading-tight whitespace-normal pr-2 border border-gray-100 rounded p-2">
                               {item.targetingDetails || product?.targetingDetails || '-'}
                             </div>
-                          )}
-                        </TableCell>
-                        {/* Ad Sizes */}
-                        <TableCell>
-                          {editingLineItem === item.id ? (
-                            <Input
-                              value={item.adSizes || product?.adSizes || ''}
-                              onChange={(e) => handleLineItemUpdate(item, 'adSizes', e.target.value)}
-                              className="w-full text-sm"
-                              placeholder="Ad sizes"
-                            />
-                          ) : (
+                          </TableCell>
+                        )}
+                        {/* Ad Sizes - only show when not editing */}
+                        {editingLineItem === null && (
+                          <TableCell>
                             <div className="text-sm space-y-1.5 min-w-[150px]">
                               {(() => {
                                 const adSizesText = item.adSizes || product?.adSizes || '-';
@@ -470,8 +460,8 @@ export default function MediaPlanBuilder({
                                 }
                               })()}
                             </div>
-                          )}
-                        </TableCell>
+                          </TableCell>
+                        )}
                         {/* Start Date */}
                         <TableCell>
                           {editingLineItem === item.id ? (
