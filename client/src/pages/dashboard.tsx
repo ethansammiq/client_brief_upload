@@ -186,7 +186,9 @@ export default function Dashboard() {
         )}
 
         {activeTab === "media-products" && (
-          <MediaProductsManager />
+          <div className="flex-1 overflow-auto">
+            <MediaProductsManager />
+          </div>
         )}
       </div>
     </div>
