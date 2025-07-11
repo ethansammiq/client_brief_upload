@@ -197,12 +197,27 @@ export default function AddProductModal({ product, selectedVersionId, children }
                 <div>
                   <FormLabel className="text-sm font-medium text-gray-700">Ad Sizes</FormLabel>
                   <div className="mt-1 p-3 bg-white border border-gray-200 rounded-md text-sm text-gray-700">
-                    <div className="flex flex-wrap gap-2">
-                      {(product.adSizes || "No ad sizes specified").split(',').map((size, index) => (
-                        <span key={index} className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded">
-                          {size.trim()}
-                        </span>
-                      ))}
+                    <div className="space-y-2">
+                      {(product.adSizes || "No ad sizes specified").split(/(?=Desktop:|Tablet:|Mobile:)/g).filter(Boolean).map((platformGroup, index) => {
+                        const lines = platformGroup.trim().split(' ');
+                        const platform = lines[0]; // Desktop:, Tablet:, Mobile:
+                        const sizes = lines.slice(1).join(' ').split(',').map(s => s.trim()).filter(Boolean);
+                        
+                        return (
+                          <div key={index} className="flex flex-wrap items-center gap-2">
+                            <span className="font-semibold text-gray-900 min-w-[80px]">
+                              {platform}
+                            </span>
+                            <div className="flex flex-wrap gap-1">
+                              {sizes.map((size, sizeIndex) => (
+                                <span key={sizeIndex} className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded">
+                                  {size}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

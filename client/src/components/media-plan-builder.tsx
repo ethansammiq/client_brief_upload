@@ -328,18 +328,24 @@ export default function MediaPlanBuilder({
                               placeholder="Ad sizes"
                             />
                           ) : (
-                            <span className="text-sm text-gray-900">
-                              {(item.adSizes || product?.adSizes || '-').split(',').map((size, index) => (
-                                <span key={index}>
-                                  {index > 0 && ', '}
-                                  {size.trim().includes('x') ? (
-                                    <span className="font-semibold">{size.trim()}</span>
-                                  ) : (
-                                    size.trim()
-                                  )}
-                                </span>
-                              ))}
-                            </span>
+                            <div className="text-sm text-gray-900 space-y-1">
+                              {(item.adSizes || product?.adSizes || '-').split(/(?=Desktop:|Tablet:|Mobile:)/g).filter(Boolean).map((platformGroup, index) => {
+                                const lines = platformGroup.trim().split(' ');
+                                const platform = lines[0]; // Desktop:, Tablet:, Mobile:
+                                const sizes = lines.slice(1).join(' ').split(',').map(s => s.trim()).filter(Boolean);
+                                
+                                return (
+                                  <div key={index} className="flex items-center gap-1">
+                                    <span className="font-semibold text-gray-900 text-xs">
+                                      {platform}
+                                    </span>
+                                    <span className="text-xs text-gray-600">
+                                      {sizes.join(', ')}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
                           )}
                         </TableCell>
                         {/* Start Date */}
