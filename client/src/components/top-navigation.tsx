@@ -16,7 +16,16 @@ export default function TopNavigation() {
     <header className="bg-[#2B1B3D] text-white border-b border-gray-800">
       {/* Top bar with logo and user info */}
       <div className="flex items-center px-6 py-3">
-        {/* Centered Navigation Items */}
+        {/* MiQ Logo - Fixed width container */}
+        <div className="flex items-center space-x-2 w-24">
+          <img 
+            src="/attached_assets/MIQ WHITE LOGO_1752201666702.png" 
+            alt="MiQ" 
+            className="h-6 w-auto"
+          />
+        </div>
+        
+        {/* Centered Navigation Items - Use flex-1 to take remaining space */}
         <div className="flex-1 flex justify-center">
           <nav className="flex space-x-8">
             {navItems.map((item) => (
@@ -34,8 +43,8 @@ export default function TopNavigation() {
           </nav>
         </div>
 
-        {/* Right side - User info and actions */}
-        <div className="flex items-center space-x-4">
+        {/* Right side - User info and actions - Fixed width container */}
+        <div className="flex items-center space-x-4 w-40 justify-end">
           <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white">
             <Search className="w-4 h-4" />
           </Button>

@@ -19,6 +19,8 @@ This is a full-stack TypeScript application for managing RFP (Request for Propos
   - Added proper spacing and visual hierarchy for ad sizes with individual size badges
   - Fixed ad sizes formatting to handle both platform-specific and non-platform formats (audio/video durations)
   - Removed extra colons from audio/video ad sizes display for cleaner presentation
+  - Updated top navigation with official MiQ white logo replacing previous placeholder
+  - Removed "Click to add" text from product library cards for cleaner interface
   - Maintained existing expanded media plan chart structure with all comprehensive fields
   - Enhanced ProductLibrary component to pass campaign context to product addition modal
   - Ensured consistent date formatting and display across all components
