@@ -84,6 +84,59 @@ export default function MediaPlanBuilder({
     },
   });
 
+  const duplicateVersionMutation = useMutation({
+    mutationFn: async () => {
+      if (!rfpResponse || !currentVersion) return;
+      
+      // Create new version
+      const newVersion: InsertMediaPlanVersion = {
+        rfpResponseId: rfpResponse.id,
+        versionNumber: mediaPlanVersions.length + 1,
+        title: `${currentVersion.title} (Copy)`,
+        totalBudget: currentVersion.totalBudget,
+        totalImpressions: currentVersion.totalImpressions,
+        avgCpm: currentVersion.avgCpm,
+        isActive: true,
+      };
+      
+      const createdVersion = await apiRequest("POST", "/api/media-plan-versions", newVersion);
+      
+      // Copy all line items from current version to new version
+      const lineItemPromises = lineItems.map(item => {
+        const newLineItem = {
+          mediaPlanVersionId: createdVersion.id,
+          productId: item.productId,
+          placementName: item.placementName,
+          targetingDetails: item.targetingDetails,
+          adSizes: item.adSizes,
+          startDate: item.startDate,
+          endDate: item.endDate,
+          rateModel: item.rateModel,
+          cpmRate: item.cpmRate,
+          impressions: item.impressions,
+          totalCost: item.totalCost,
+        };
+        return apiRequest("POST", "/api/line-items", newLineItem);
+      });
+      
+      await Promise.all(lineItemPromises);
+      
+      return createdVersion;
+    },
+    onSuccess: (newVersion) => {
+      queryClient.invalidateQueries({ 
+        queryKey: [`/api/rfp-responses/${rfpResponse?.id}/media-plan-versions`] 
+      });
+      if (newVersion) {
+        onVersionChange(newVersion.id);
+      }
+      toast({
+        title: "Plan Duplicated",
+        description: "Media plan has been duplicated successfully.",
+      });
+    },
+  });
+
   const updateLineItemMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: Partial<MediaPlanLineItem> }) => {
       return apiRequest("PUT", `/api/line-items/${id}`, data);
@@ -516,9 +569,14 @@ export default function MediaPlanBuilder({
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <Button variant="outline" className="text-gray-700 hover:bg-gray-200">
+                <Button 
+                  variant="outline" 
+                  onClick={() => duplicateVersionMutation.mutate()}
+                  disabled={duplicateVersionMutation.isPending || lineItems.length === 0}
+                  className="text-gray-700 hover:bg-gray-200"
+                >
                   <Copy className="w-4 h-4 mr-2" />
-                  Duplicate Plan
+                  {duplicateVersionMutation.isPending ? "Duplicating..." : "Duplicate Plan"}
                 </Button>
               </div>
             </div>

@@ -6,7 +6,7 @@ This is a full-stack TypeScript application for managing RFP (Request for Propos
 
 ## Recent Changes
 
-- **July 11, 2025**: Campaign Date Integration and Enhanced User Experience
+- **July 11, 2025**: Campaign Date Integration, Enhanced User Experience, and Duplicate Plan Functionality
   - Added campaign start and end date fields to RFP response schema and create/edit forms
   - Updated campaign header to display campaign duration prominently alongside client and due date information
   - Enhanced add product modal to automatically populate campaign dates as default values for line items
@@ -24,6 +24,9 @@ This is a full-stack TypeScript application for managing RFP (Request for Propos
   - Maintained existing expanded media plan chart structure with all comprehensive fields
   - Enhanced ProductLibrary component to pass campaign context to product addition modal
   - Ensured consistent date formatting and display across all components
+  - Implemented duplicate plan functionality to create version copies with all line items
+  - Added proper loading states and validation for duplicate plan feature
+  - Fixed media products page scrolling issue with proper overflow handling
 
 - **July 10, 2025**: Complete Media Planner redesign with card-based layout
   - Redesigned entire Media Planner tab with modern card-based layout inspired by MiQ platform
