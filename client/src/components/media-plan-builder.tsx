@@ -49,7 +49,6 @@ export default function MediaPlanBuilder({
 
   // Debug logging
   console.log('Line items:', lineItems);
-  console.log('Grouped result:', groupLineItems());
 
   const createVersionMutation = useMutation({
     mutationFn: async () => {
@@ -329,6 +328,9 @@ export default function MediaPlanBuilder({
 
     return grouped;
   };
+
+  // Debug logging after function definition
+  console.log('Grouped result:', groupLineItems());
 
   const calculateTotals = () => {
     const totalBudget = lineItems.reduce((sum, item) => sum + parseFloat(item.totalCost), 0);
