@@ -171,7 +171,29 @@ export default function YouTubePackageModal({
             Add {product.name} Package
           </DialogTitle>
           <DialogDescription>
-            {product.targetingDetails}
+            {(() => {
+              const targetingDetails = product.targetingDetails;
+              if (!targetingDetails) return null;
+              
+              // Look for text between ** and **
+              const noticeMatch = targetingDetails.match(/\*\*(.*?)\*\*/);
+              if (noticeMatch) {
+                const notice = noticeMatch[1];
+                const content = targetingDetails.replace(/\*\*.*?\*\*\s*/, '').trim();
+                return (
+                  <div>
+                    <div className="text-sm font-semibold text-blue-800 bg-blue-50 p-2 rounded mb-3 border border-blue-200">
+                      {notice}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {content}
+                    </div>
+                  </div>
+                );
+              }
+              
+              return <div className="text-sm text-gray-600">{targetingDetails}</div>;
+            })()}
           </DialogDescription>
         </DialogHeader>
         

@@ -539,15 +539,8 @@ export default function MediaPlanBuilder({
                                 {(() => {
                                   const formatted = formatTargetingDetails(group.sharedData?.targetingDetails);
                                   return (
-                                    <div>
-                                      {formatted.notice && (
-                                        <div className="text-xs font-semibold text-blue-800 bg-blue-50 p-1 rounded mb-2 border border-blue-200">
-                                          {formatted.notice}
-                                        </div>
-                                      )}
-                                      <div className="text-xs text-gray-700">
-                                        {formatted.content || '-'}
-                                      </div>
+                                    <div className="text-xs text-gray-700">
+                                      {formatted.content || '-'}
                                     </div>
                                   );
                                 })()}
@@ -686,15 +679,8 @@ export default function MediaPlanBuilder({
                               {(() => {
                                 const formatted = formatTargetingDetails(item.targetingDetails || product?.targetingDetails);
                                 return (
-                                  <div>
-                                    {formatted.notice && (
-                                      <div className="text-xs font-semibold text-blue-800 bg-blue-50 p-1 rounded mb-2 border border-blue-200">
-                                        {formatted.notice}
-                                      </div>
-                                    )}
-                                    <div className="text-xs text-gray-700">
-                                      {formatted.content || '-'}
-                                    </div>
+                                  <div className="text-xs text-gray-700">
+                                    {formatted.content || '-'}
                                   </div>
                                 );
                               })()}
