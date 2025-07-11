@@ -170,32 +170,34 @@ export default function YouTubePackageModal({
             <Package className="w-5 h-5" />
             Add {product.name} Package
           </DialogTitle>
-          <DialogDescription>
-            {(() => {
-              const targetingDetails = product.targetingDetails;
-              if (!targetingDetails) return null;
-              
-              // Look for text between ** and **
-              const noticeMatch = targetingDetails.match(/\*\*(.*?)\*\*/);
-              if (noticeMatch) {
-                const notice = noticeMatch[1];
-                const content = targetingDetails.replace(/\*\*.*?\*\*\s*/, '').trim();
-                return (
-                  <div>
-                    <div className="text-sm font-semibold text-blue-800 bg-blue-50 p-2 rounded mb-3 border border-blue-200">
-                      {notice}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {content}
-                    </div>
-                  </div>
-                );
-              }
-              
-              return <div className="text-sm text-gray-600">{targetingDetails}</div>;
-            })()}
-          </DialogDescription>
         </DialogHeader>
+        
+        {/* Package targeting details */}
+        <div className="mb-6">
+          {(() => {
+            const targetingDetails = product.targetingDetails;
+            if (!targetingDetails) return null;
+            
+            // Look for text between ** and **
+            const noticeMatch = targetingDetails.match(/\*\*(.*?)\*\*/);
+            if (noticeMatch) {
+              const notice = noticeMatch[1];
+              const content = targetingDetails.replace(/\*\*.*?\*\*\s*/, '').trim();
+              return (
+                <div>
+                  <div className="text-sm font-semibold text-blue-800 bg-blue-50 p-3 rounded mb-3 border border-blue-200">
+                    {notice}
+                  </div>
+                  <div className="text-sm text-gray-600 leading-relaxed">
+                    {content}
+                  </div>
+                </div>
+              );
+            }
+            
+            return <div className="text-sm text-gray-600 leading-relaxed">{targetingDetails}</div>;
+          })()}
+        </div>
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
